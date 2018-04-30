@@ -57,14 +57,14 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
                 // If an AdapterView is backed by this data, notify it
                 // of the change. For instance, if you have a ListView of
                 // available peers, trigger an update.
-                ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+                //((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
 
                 // Perform any other updates needed based on the new list of
                 // peers connected to the Wi-Fi P2P network.
             }
 
             if (peers.size() == 0) {
-                Log.d(WiFiDirectActivity.TAG, "No devices found");
+                //Log.d(WiFiDirectActivity.TAG, "No devices found");
                 return;
             }
         }
@@ -73,6 +73,12 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "WiFiP2PManager";
+    }
+
+    @ReactMethod
+    public void log() {
+        Log.d(TAG, "logger check method");
+        System.out.println("logger check method");
     }
 
     @ReactMethod
@@ -119,7 +125,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
                 // request available peers from the wifi p2p manager. This is an
                 // asynchronous call and the calling connection is notified with a
                 // callback on PeerListListener.onPeersAvailable()
-                mManager.requestPeers(mChannel, getPeerListener());
+                //mManager.requestPeers(mChannel, getPeerListener());
                 Log.d(TAG, "P2P peers changed.");
             } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
                 Log.d(TAG, "P2P connection changed.");
@@ -130,7 +136,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
                     // we are connected with the other device, request connection
                     // info to find group owner IP
                     Log.d(TAG, "We are connected, yay! "+networkInfo.getState());
-                    mManager.requestConnectionInfo(mChannel, getConnectionListener());
+                    //mManager.requestConnectionInfo(mChannel, getConnectionListener());
                 }
 
             } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
