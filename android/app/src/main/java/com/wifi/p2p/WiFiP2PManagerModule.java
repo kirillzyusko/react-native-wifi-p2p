@@ -5,6 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 
 import com.facebook.react.bridge.NativeModule;
@@ -13,6 +17,10 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import android.util.Log;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 import static android.os.Looper.getMainLooper;
@@ -25,23 +33,69 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
     BroadcastReceiver mReceiver;
+    private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+
     public WiFiP2PManagerModule(ReactApplicationContext reactContext) {
         super(reactContext);
-    }
-
-    @Override
-    public String getName() {
-        return "MyModule";
-    }
-
-    @ReactMethod
-    public void connect(String message) {
         Activity activity = getCurrentActivity();
         if (activity != null) {
             mManager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
             mChannel = mManager.initialize(activity.getApplicationContext(), getMainLooper(), null);
             mReceiver = new WiFiDirectBroadcastReceiver();
         }
+    }
+
+    private WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
+        @Override
+        public void onPeersAvailable(WifiP2pDeviceList peerList) {
+
+            List<WifiP2pDevice> refreshedPeers = new ArrayList<>(peerList.getDeviceList());
+            if (!refreshedPeers.equals(peers)) {
+                peers.clear();
+                peers.addAll(refreshedPeers);
+
+                // If an AdapterView is backed by this data, notify it
+                // of the change. For instance, if you have a ListView of
+                // available peers, trigger an update.
+                ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+
+                // Perform any other updates needed based on the new list of
+                // peers connected to the Wi-Fi P2P network.
+            }
+
+            if (peers.size() == 0) {
+                Log.d(WiFiDirectActivity.TAG, "No devices found");
+                return;
+            }
+        }
+    };
+
+    @Override
+    public String getName() {
+        return "WiFiP2PManager";
+    }
+
+    @ReactMethod
+    public void connect(String message) {
+        // Picking the first device found on the network.
+        WifiP2pDevice device = peers.get(0);
+
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = device.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
+
+        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                // WiFiDirectBroadcastReceiver notifies us. Ignore for now.
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.d(TAG, "fail connection: "+ reason);
+            }
+        });
     }
 
     /**
