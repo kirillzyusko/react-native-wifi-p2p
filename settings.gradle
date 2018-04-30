@@ -1,0 +1,1 @@
+include ':myapplication', ':p2p', ':android', ':android'
