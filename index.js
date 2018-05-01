@@ -1,2 +1,2 @@
 import { NativeModules } from 'react-native';
-module.exports = NativeModules.WiFiP2PManager;
+module.exports = NativeModules.WiFiP2PManagerModule;
