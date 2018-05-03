@@ -43,4 +43,5 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     compile 'com.facebook.react:react-native:+'
+    compile 'com.google.code.gson:gson:2.8.4'
 }

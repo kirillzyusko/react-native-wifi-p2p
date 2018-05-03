@@ -30,11 +30,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
 
     public WiFiP2PManagerModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        Activity activity = getCurrentActivity();
-        if (activity != null) {
-            manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
-            channel = manager.initialize(activity, getMainLooper(), null);
-        }
+        observablePeers.add(new WifiP2pDevice());
     }
 
     @Override
@@ -50,15 +46,25 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getAvailablePeersList(Callback listener) {
-        manager.requestPeers(channel, peerListListener);
+        Activity activity = getCurrentActivity();
+        if (activity != null) {
+            manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
+            channel = manager.initialize(activity, getMainLooper(), null);
+        }
+        System.out.println(manager); // null
+        System.out.println(channel);
         CallbackPeerListener callbackPeerListener = new CallbackPeerListener(listener);
         observablePeers.addOnListChangedCallback(callbackPeerListener);
+        System.out.println("Try ti request peer list");
+        manager.requestPeers(channel, peerListListener);
+        observablePeers.add(new WifiP2pDevice());
+        observablePeers.add(new WifiP2pDevice());
     }
 
     private PeerListListener peerListListener = new PeerListListener() {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
-            System.out.println("onPeersAvailable " + peerList + " " + peerList.describeContents());
+            System.out.println("onPeersAvailable " + peerList.getDeviceList().size() + " " + peerList.describeContents());
             List<WifiP2pDevice> refreshedPeers = new ArrayList<>(peerList.getDeviceList());
             if (!refreshedPeers.equals(observablePeers)) {
                 System.out.println("List was changed");
