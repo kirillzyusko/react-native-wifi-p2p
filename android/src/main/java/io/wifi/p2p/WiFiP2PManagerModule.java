@@ -30,7 +30,6 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
 
     public WiFiP2PManagerModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        observablePeers.add(new WifiP2pDevice());
     }
 
     @Override
@@ -56,9 +55,19 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
         CallbackPeerListener callbackPeerListener = new CallbackPeerListener(listener);
         observablePeers.addOnListChangedCallback(callbackPeerListener);
         System.out.println("Try ti request peer list");
+        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                System.out.println("SUCCESS DISCOVER PEERS");
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                System.out.println("FAILED DISCOVER PEERS " + reasonCode);
+            }
+        });
+
         manager.requestPeers(channel, peerListListener);
-        observablePeers.add(new WifiP2pDevice());
-        observablePeers.add(new WifiP2pDevice());
     }
 
     private PeerListListener peerListListener = new PeerListListener() {
