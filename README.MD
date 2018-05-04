@@ -1,10 +1,10 @@
-#react-native-wifi-p2p
+# react-native-wifi-p2p
 
 ``react-native-wifi-p2p`` is a build to provide WiFi Direct (Peer-To-Peer, P2P) service to react-native.
 
 **_important_**: currently only android support realized
 
-##Installation
+## Installation
 
 Install library from `npm`
 
@@ -49,7 +49,7 @@ Open up `android/app/src/main/java/[...]/MainApplication.java`
 * Add import `import io.wifi.p2p.WiFiP2PManagerPackage;` to the imports at the top of the file.
 * Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
 
-##API
+## API
 * [initialize]()
 * [getAvailablePeers]()
 * [connect]()
