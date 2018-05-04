@@ -17,8 +17,14 @@ const connect = (deviceAddress) => new Promise((resolve, reject) => {
     })
 });
 
+const isWiFiEnabled = () => true;
+
+const setWiFiState = (isEnabled) => {};
+
 export {
     getAvailablePeers,
     initialize,
+    isWiFiEnabled,
+    setWiFiState,
     connect
 };
