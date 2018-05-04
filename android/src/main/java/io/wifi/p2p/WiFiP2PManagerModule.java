@@ -70,6 +70,11 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
         manager.requestPeers(channel, peerListListener);
     }
 
+    @ReactMethod
+    public void connect(String deviceAddress, Callback listener) {
+        listener.invoke(deviceAddress);
+    }
+
     private PeerListListener peerListListener = new PeerListListener() {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
