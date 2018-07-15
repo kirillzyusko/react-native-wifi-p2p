@@ -70,7 +70,7 @@ Notice, that recommend called only once.
 
 `startDiscoveringPeers()` starting emit action to discover available devices. Note, that this function doesn't return any information about available devices/peers. It return information about successfully start.
 
-```ecmascript 6
+```javascript
 startDiscoveringPeers()
     .then(status => console.log('Starting of discovering was successful'))
     .cactch(status => console.error('Something is gone wrong. Are you sure, that your WiFi enabled?'))
@@ -81,14 +81,14 @@ startDiscoveringPeers()
 
 `subscribeOnPeersUpdates(callback)` allow to subscribe on events, that will notify about availability of nearby devices.
 
-```ecmascript 6
+```javascript
 subscribeOnPeersUpdates(({ devices }) => {
     console.log(`New devices available: ${devices}`);
 })
 ```
 
 ### unsubscribeOnPeersUpdates(callback)
-```ecmascript 6
+```javascript
 unsubscribeOnPeersUpdates((event) => console.log(event))
 ```
 
@@ -96,7 +96,7 @@ unsubscribeOnPeersUpdates((event) => console.log(event))
 
 Connect to network. The devices found from the `subscribeOnPeersUpdates` method. Should use `deviceAddress` field from necessary device from array. This field represent a `MAC address` that is used to connect.
 
-```ecmascript 6
+```javascript
 connect('22:47:da:9d:58:83')
     .then(status => console.log('Successfully connected'))
     .catch(err => console.log('Something gone wrong: ', err))
