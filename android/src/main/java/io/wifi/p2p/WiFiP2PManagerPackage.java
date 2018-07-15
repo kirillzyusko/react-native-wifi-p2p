@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Created by zyusk on 01.05.2018.
  */
-
 public class WiFiP2PManagerPackage implements ReactPackage {
     public List<Class<? extends JavaScriptModule>> createJSModules() {
         return Collections.emptyList();
@@ -25,7 +24,6 @@ public class WiFiP2PManagerPackage implements ReactPackage {
 
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
-
         modules.add(new WiFiP2PManagerModule(reactContext));
 
         return modules;

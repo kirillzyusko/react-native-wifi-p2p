@@ -2,6 +2,7 @@ package io.wifi.p2p;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -28,10 +29,13 @@ import static android.os.Looper.getMainLooper;
 public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
+    private ReactApplicationContext reactContext;
+    private final IntentFilter intentFilter = new IntentFilter();
     private ObservableArrayList<WifiP2pDevice> observablePeers = new ObservableArrayList<>();
 
     public WiFiP2PManagerModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.reactContext = reactContext;
     }
 
     @Override
@@ -47,6 +51,11 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void init() {
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
         Activity activity = getCurrentActivity();
         if (activity != null) {
             manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);

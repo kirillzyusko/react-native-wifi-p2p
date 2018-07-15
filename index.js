@@ -21,6 +21,10 @@ const isWiFiEnabled = () => true;
 
 const setWiFiState = (isEnabled) => {};
 
+const addEventListener = (event, callback) => {
+
+};
+
 export {
     getAvailablePeers,
     initialize,
