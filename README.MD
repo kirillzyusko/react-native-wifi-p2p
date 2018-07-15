@@ -8,7 +8,7 @@
 
 - Install library from `npm`
 
-``npm install react-native-wifi-p2p --save``
+``npm install kirikzyusko1996/react-native-wifi-p2p --save``
 
 - Allow grant permission to WiFi module
 
