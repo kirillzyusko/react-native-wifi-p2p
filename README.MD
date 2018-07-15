@@ -9,7 +9,9 @@ If you want to provide iOS support, then you should to note to [react-native-mul
 
 - Install library from `npm`
 
-``npm install kirikzyusko1996/react-native-wifi-p2p --save``
+```sh
+npm install kirikzyusko1996/react-native-wifi-p2p --save
+```
 
 - Allow grant permission to WiFi module
 
@@ -36,14 +38,16 @@ If you want to provide iOS support, then you should to note to [react-native-mul
 
 - Append the following lines to `android/settings.gradle`
 
-```
-include ':react-native-wifi-p2p'
-project(':react-native-wifi-p2p').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wifi-p2p/android')
+```diff
++ include ':react-native-wifi-p2p'
++ project(':react-native-wifi-p2p').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wifi-p2p/android')
 ```
 
 - Insert the following lines inside the dependencies block in `android/app/build.gradle`:
 
-``compile project(':react-native-wifi-p2p')``
+```diff
++ compile project(':react-native-wifi-p2p')
+```
 
 Open up `android/app/src/main/java/[...]/MainApplication.java`
 
