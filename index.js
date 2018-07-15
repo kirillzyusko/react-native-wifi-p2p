@@ -25,10 +25,16 @@ const addEventListener = (event, callback) => {
     DeviceEventEmitter.addListener(`WIFI_P2P:${event}`, callback);
 };
 
+const removeEventListener = (event, callback) => {
+    DeviceEventEmitter.removeListener(`WIFI_P2P:${event}`, callback);
+};
+
 export {
     getAvailablePeers,
     initialize,
     isWiFiEnabled,
     setWiFiState,
-    connect
+    connect,
+    addEventListener,
+    removeEventListener
 };
