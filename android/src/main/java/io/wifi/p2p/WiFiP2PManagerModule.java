@@ -89,7 +89,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
-
+        System.out.println("config: " + config + "| device: " + device);
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
 
             @Override
