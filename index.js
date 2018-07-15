@@ -1,4 +1,4 @@
-import { NativeModules } from 'react-native';
+import { DeviceEventEmitter, NativeModules } from 'react-native';
 
 const WiFiP2PManager = NativeModules.WiFiP2PManagerModule;
 
@@ -22,7 +22,7 @@ const isWiFiEnabled = () => true;
 const setWiFiState = (isEnabled) => {};
 
 const addEventListener = (event, callback) => {
-
+    DeviceEventEmitter.addListener(`WIFI_P2P:${event}`, callback);
 };
 
 export {

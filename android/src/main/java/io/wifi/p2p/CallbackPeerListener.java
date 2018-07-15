@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 /**
  * Created by kiryl on 3.5.18.
  */
-
 public class CallbackPeerListener extends OnListChangedCallback {
     private Callback callback;
     private boolean isCallbackCalledOnce = false;

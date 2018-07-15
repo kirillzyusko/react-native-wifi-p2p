@@ -25,7 +25,6 @@ import static android.os.Looper.getMainLooper;
 /**
  * Created by zyusk on 01.05.2018.
  */
-
 public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
@@ -60,6 +59,9 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
         if (activity != null) {
             manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
             channel = manager.initialize(activity, getMainLooper(), null);
+
+            WiFiDirectBroadcastReceiver receiver = new WiFiDirectBroadcastReceiver(manager, channel, reactContext);
+            activity.registerReceiver(receiver, intentFilter);
         }
     }
 

@@ -17,7 +17,10 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
+/**
+ * Created by zyusk on 15.07.2018.
+ */
+public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
     private ReactApplicationContext reactContext;
