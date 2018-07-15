@@ -2,6 +2,8 @@ package io.wifi.p2p;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -44,17 +46,26 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getAvailablePeersList(Callback listener) {
+    public void init() {
         Activity activity = getCurrentActivity();
         if (activity != null) {
             manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
             channel = manager.initialize(activity, getMainLooper(), null);
         }
+    }
+
+    @ReactMethod
+    public boolean isSuccesfullInitialize() {
+        return manager != null && channel != null;
+    }
+
+    @ReactMethod
+    public void getAvailablePeersList(Callback listener) {
         System.out.println(manager); // null
         System.out.println(channel);
         CallbackPeerListener callbackPeerListener = new CallbackPeerListener(listener);
         observablePeers.addOnListChangedCallback(callbackPeerListener);
-        System.out.println("Try ti request peer list");
+        System.out.println("Try to request peer list");
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -71,8 +82,29 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void connect(String deviceAddress, Callback listener) {
-        listener.invoke(deviceAddress);
+    public void connect(final String deviceAddress, final Callback listener) {
+        // Picking the first device found on the network.
+        WifiP2pDevice device = new WifiP2pDevice();
+
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = device.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
+
+        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                listener.invoke(deviceAddress);
+                System.out.println("Connect is successfully");
+                // WiFiDirectBroadcastReceiver notifies us. Ignore for now.
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                listener.invoke(null);
+                System.out.println("Connect is failure");
+            }
+        });
     }
 
     private PeerListListener peerListListener = new PeerListListener() {
