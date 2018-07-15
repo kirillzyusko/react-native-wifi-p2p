@@ -93,6 +93,21 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void discoverPeers(final Callback listener) {
+        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                listener.invoke(true);
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                listener.invoke(false);
+            }
+        });
+    }
+
+    @ReactMethod
     public void connect(final String deviceAddress, final Callback listener) {
         // Picking the first device found on the network.
         WifiP2pDevice device = new WifiP2pDevice();

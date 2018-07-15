@@ -17,6 +17,12 @@ const connect = (deviceAddress) => new Promise((resolve, reject) => {
     })
 });
 
+const startDiscoverPeers = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.discoverPeers((isSuccess) => {
+        resolve(isSuccess);
+    })
+});
+
 const isWiFiEnabled = () => true;
 
 const setWiFiState = (isEnabled) => {};
@@ -36,5 +42,6 @@ export {
     setWiFiState,
     connect,
     addEventListener,
-    removeEventListener
+    removeEventListener,
+    startDiscoverPeers
 };
