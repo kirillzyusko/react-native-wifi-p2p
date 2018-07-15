@@ -6,13 +6,13 @@
 
 ## Installation
 
-Install library from `npm`
+- Install library from `npm`
 
 ``npm install react-native-wifi-p2p --save``
 
-Allow grant permission to WiFi module
+- Allow grant permission to WiFi module
 
-```
+```diff
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.wifi.p2p"
     android:versionCode="1"
@@ -33,14 +33,14 @@ Allow grant permission to WiFi module
     ...
 ```
 
-Append the following lines to `android/settings.gradle`
+- Append the following lines to `android/settings.gradle`
 
 ```
 include ':react-native-wifi-p2p'
 project(':react-native-wifi-p2p').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wifi-p2p/android')
 ```
 
-Insert the following lines inside the dependencies block in `android/app/build.gradle`:
+- Insert the following lines inside the dependencies block in `android/app/build.gradle`:
 
 ``compile project(':react-native-wifi-p2p')``
 
