@@ -2,30 +2,17 @@ import { DeviceEventEmitter, NativeModules } from 'react-native';
 
 const WiFiP2PManager = NativeModules.WiFiP2PManagerModule;
 
+// ACTIONS
+const PEERS_UPDATED_ACTION = 'PEERS_UPDATED';
+const CONNECTION_INFO_UPDATED_ACTION = 'CONNECTION_INFO_UPDATED';
+
 const initialize = () => WiFiP2PManager.init();
 
-const getAvailablePeers = () => new Promise((resolve, reject) => {
-    WiFiP2PManager.getAvailablePeersList(peersList => {
-        const peers = JSON.parse(peersList);
-        resolve(peers);
-    })
-});
-
-const connect = (deviceAddress) => new Promise((resolve, reject) => {
-    WiFiP2PManager.connect(deviceAddress, data => {
-        resolve(data);
-    })
-});
-
-const startDiscoverPeers = () => new Promise((resolve, reject) => {
+const startDiscoveringPeers = () => new Promise((resolve, reject) => {
     WiFiP2PManager.discoverPeers((isSuccess) => {
         resolve(isSuccess);
     })
 });
-
-const isWiFiEnabled = () => true;
-
-const setWiFiState = (isEnabled) => {};
 
 const addEventListener = (event, callback) => {
     DeviceEventEmitter.addListener(`WIFI_P2P:${event}`, callback);
@@ -35,13 +22,43 @@ const removeEventListener = (event, callback) => {
     DeviceEventEmitter.removeListener(`WIFI_P2P:${event}`, callback);
 };
 
+const subscribeOnPeersUpdates = (callback) => DeviceEventEmitter.addListener(`WIFI_P2P:${PEERS_UPDATED_ACTION}`, callback);
+
+const unsubscribeOnPeersUpdates = (callback) => DeviceEventEmitter.removeListener(`WIFI_P2P:${PEERS_UPDATED_ACTION}`, callback);
+
+const connect = (deviceAddress) => new Promise((resolve, reject) => {
+    WiFiP2PManager.connect(deviceAddress, data => {
+        resolve(data);
+    })
+});
+
+const getAvailablePeers = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.getAvailablePeersList(peersList => {
+        const peers = JSON.parse(peersList);
+        resolve(peers);
+    })
+});
+
+const isWiFiEnabled = () => true;
+
+const setWiFiState = (isEnabled) => {};
+
 export {
-    getAvailablePeers,
+    // methods
     initialize,
-    isWiFiEnabled,
-    setWiFiState,
+    startDiscoveringPeers,
+    subscribeOnPeersUpdates,
+    unsubscribeOnPeersUpdates,
     connect,
     addEventListener,
     removeEventListener,
-    startDiscoverPeers
+
+    // const
+    PEERS_UPDATED_ACTION,
+    CONNECTION_INFO_UPDATED_ACTION,
+
+    // future realization
+    getAvailablePeers,
+    isWiFiEnabled,
+    setWiFiState,
 };

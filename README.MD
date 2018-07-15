@@ -2,7 +2,8 @@
 
 ``react-native-wifi-p2p`` is a build to provide WiFi Direct (Peer-To-Peer, P2P) service to react-native.
 
-**_important_**: currently only android support realized
+**_Important_**: currently only **Android** support realized.
+If you want to provide iOS support, then you should to note to [react-native-multipeer](https://github.com/lwansbrough/react-native-multipeer) repository.
 
 ## Installation
 
@@ -51,10 +52,44 @@ Open up `android/app/src/main/java/[...]/MainApplication.java`
 
 ## API
 * [initialize()]()
-* [getAvailablePeers()]()
-* [connect(string deviceAddress)]()
-* [isWiFiEnabled]()
-* [setWiFiState]()
-* [createGroup]()
-* [sendData]()
-* [sendMessage]()
+* [startDiscoveringPeers()]()
+* [subscribeOnPeersUpdates(callback)]()
+* [unsubscribeOnPeersUpdates(callback)]()
+* [connect(deviceAddress)]()
+* [createGroup]() `future`
+* [sendData]() `future`
+* [sendMessage]() `future`
+
+### initialize
+
+This method must calling before any using of others method, because here happened start initialization of `react-native-wifi-p2p` module.
+Recommend to initialize it on root files, but if your application has specific logic, then you can call it before directly using.
+Notice, that recommend called only once.
+
+### startDiscoveringPeers(): Promise<string>
+
+`startDiscoveringPeers()` starting emit action to discover available devices. Note, that this function doesn't return any information about available devices/peers. It return information about successfully start.
+
+```ecmascript 6
+startDiscoveringPeers()
+  .then(status => console.log('Starting of discovering was successful'))
+  .cactch(status => console.error('Something is gone wrong. Are you sure, that your WiFi enabled?'))
+})
+```
+
+### subscribeOnPeersUpdates(callback)
+
+`subscribeOnPeersUpdates(callback)` allow to subscribe on events, that will notify about availability of nearby devices.
+
+```ecmascript 6
+subscribeOnPeersUpdates(({ devices }) => {
+    console.log(`New devices available: ${devices}`);
+})
+```
+
+### unsubscribeOnPeersUpdates(callback)
+```ecmascript 6
+unsubscribeOnPeersUpdates((event) => console.log(event))
+```
+
+### connect(deviceAddress)

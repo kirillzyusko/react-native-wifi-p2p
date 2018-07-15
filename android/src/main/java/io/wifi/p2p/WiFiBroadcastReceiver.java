@@ -20,12 +20,12 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 /**
  * Created by zyusk on 15.07.2018.
  */
-public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
+public class WiFiBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
     private ReactApplicationContext reactContext;
 
-    public WiFiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ReactApplicationContext reactContext) {
+    public WiFiBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ReactApplicationContext reactContext) {
         super();
 
         this.manager = manager;

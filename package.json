@@ -1,11 +1,11 @@
 {
   "name": "react-native-wifi-p2p",
-  "version": "0.0.1",
+  "version": "0.3.2",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Kiryl Ziusko",
   "license": "ISC"
 }

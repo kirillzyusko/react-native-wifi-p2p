@@ -60,7 +60,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
             manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
             channel = manager.initialize(activity, getMainLooper(), null);
 
-            WiFiDirectBroadcastReceiver receiver = new WiFiDirectBroadcastReceiver(manager, channel, reactContext);
+            WiFiBroadcastReceiver receiver = new WiFiBroadcastReceiver(manager, channel, reactContext);
             activity.registerReceiver(receiver, intentFilter);
         }
     }
@@ -121,7 +121,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
             public void onSuccess() {
                 listener.invoke(deviceAddress);
                 System.out.println("Connect is successfully");
-                // WiFiDirectBroadcastReceiver notifies us. Ignore for now.
+                // WiFiBroadcastReceiver notifies us. Ignore for now.
             }
 
             @Override
