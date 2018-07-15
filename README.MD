@@ -51,16 +51,16 @@ Open up `android/app/src/main/java/[...]/MainApplication.java`
 * Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
 
 ## API
-* [initialize()]()
-* [startDiscoveringPeers()]()
-* [subscribeOnPeersUpdates(callback)]()
-* [unsubscribeOnPeersUpdates(callback)]()
-* [connect(deviceAddress)]()
+* [initialize()](https://github.com/kirikzyusko1996/react-native-wifi-p2p#initialize)
+* [startDiscoveringPeers()](https://github.com/kirikzyusko1996/react-native-wifi-p2p#startdiscoveringpeers-promise)
+* [subscribeOnPeersUpdates(callback)](https://github.com/kirikzyusko1996/react-native-wifi-p2p#subscribeonpeersupdatescallback)
+* [unsubscribeOnPeersUpdates(callback)](https://github.com/kirikzyusko1996/react-native-wifi-p2p#unsubscribeonpeersupdatescallback)
+* [connect(deviceAddress)](https://github.com/kirikzyusko1996/react-native-wifi-p2p#connectdeviceaddress)
 * [createGroup]() `future`
 * [sendData]() `future`
 * [sendMessage]() `future`
 
-### initialize
+### initialize()
 
 This method must calling before any using of others method, because here happened start initialization of `react-native-wifi-p2p` module.
 Recommend to initialize it on root files, but if your application has specific logic, then you can call it before directly using.
@@ -72,8 +72,8 @@ Notice, that recommend called only once.
 
 ```ecmascript 6
 startDiscoveringPeers()
-  .then(status => console.log('Starting of discovering was successful'))
-  .cactch(status => console.error('Something is gone wrong. Are you sure, that your WiFi enabled?'))
+    .then(status => console.log('Starting of discovering was successful'))
+    .cactch(status => console.error('Something is gone wrong. Are you sure, that your WiFi enabled?'))
 })
 ```
 
@@ -93,3 +93,11 @@ unsubscribeOnPeersUpdates((event) => console.log(event))
 ```
 
 ### connect(deviceAddress)
+
+Connect to network. The devices found from the `subscribeOnPeersUpdates` method. Should use `deviceAddress` field from necessary device from array. This field represent a `MAC address` that is used to connect.
+
+```ecmascript 6
+connect('22:47:da:9d:58:83')
+    .then(status => console.log('Successfully connected'))
+    .catch(err => console.log('Something gone wrong: ', err))
+```
