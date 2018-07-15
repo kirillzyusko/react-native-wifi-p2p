@@ -21,14 +21,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 +   <uses-permission
-                android:required="true"
-                android:name="android.permission.ACCESS_COARSE_LOCATION"/>
++               android:required="true"
++               android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 +   <uses-permission
-            android:required="true"
-            android:name="android.permission.ACCESS_WIFI_STATE"/>
++           android:required="true"
++           android:name="android.permission.ACCESS_WIFI_STATE"/>
 +   <uses-permission
-            android:required="true"
-            android:name="android.permission.CHANGE_WIFI_STATE"/>                                              
++           android:required="true"
++           android:name="android.permission.CHANGE_WIFI_STATE"/>                                              
 
     ...
 ```
