@@ -50,8 +50,11 @@ Open up `android/app/src/main/java/[...]/MainApplication.java`
 * Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
 
 ## API
-* [initialize]()
-* [getAvailablePeers]()
-* [connect]()
+* [initialize()]()
+* [getAvailablePeers()]()
+* [connect(string deviceAddress)]()
 * [isWiFiEnabled]()
 * [setWiFiState]()
+* [createGroup]()
+* [sendData]()
+* [sendMessage]()
