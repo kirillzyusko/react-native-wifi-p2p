@@ -55,11 +55,11 @@ Open up `android/app/src/main/java/[...]/MainApplication.java`
 * Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
 
 ## API
-* [initialize()](https://github.com/kirikzyusko1996/react-native-wifi-p2p#initialize)
-* [startDiscoveringPeers()](https://github.com/kirikzyusko1996/react-native-wifi-p2p#startdiscoveringpeers-promise)
-* [subscribeOnPeersUpdates(callback)](https://github.com/kirikzyusko1996/react-native-wifi-p2p#subscribeonpeersupdatescallback)
-* [unsubscribeOnPeersUpdates(callback)](https://github.com/kirikzyusko1996/react-native-wifi-p2p#unsubscribeonpeersupdatescallback)
-* [connect(deviceAddress)](https://github.com/kirikzyusko1996/react-native-wifi-p2p#connectdeviceaddress)
+* [initialize()](#initialize)
+* [startDiscoveringPeers()](#startdiscoveringpeers-promise)
+* [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
+* [unsubscribeOnPeersUpdates(callback)](#unsubscribeonpeersupdatescallback)
+* [connect(deviceAddress)](#connectdeviceaddress)
 * [createGroup]() `future`
 * [sendData]() `future`
 * [sendMessage]() `future`
