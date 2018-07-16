@@ -1,4 +1,5 @@
 import { DeviceEventEmitter, NativeModules } from 'react-native';
+import { getError } from './reason-code';
 
 const WiFiP2PManager = NativeModules.WiFiP2PManagerModule;
 
@@ -12,8 +13,8 @@ const MODULE_NAME = 'WIFI_P2P';
 const initialize = () => WiFiP2PManager.init();
 
 const startDiscoveringPeers = () => new Promise((resolve, reject) => {
-    WiFiP2PManager.discoverPeers((isSuccess) => {
-        resolve(isSuccess);
+    WiFiP2PManager.discoverPeers((reasonCode) => {
+        reasonCode === null ? resolve() : reject(getError(reasonCode));
     })
 });
 
@@ -29,35 +30,41 @@ const subscribeOnPeersUpdates = (callback) => addEventListener(PEERS_UPDATED_ACT
 
 const unsubscribeOnPeersUpdates = (callback) => removeEventListener(PEERS_UPDATED_ACTION, callback);
 
+const subscribeOnConnectionInfoUpdates = (callback) => addEventListener(CONNECTION_INFO_UPDATED_ACTION, callback);
+
+const unsubscribeOnConnectionInfoUpdates = (callback) => removeEventListener(CONNECTION_INFO_UPDATED_ACTION, callback);
+
 const connect = (deviceAddress) => new Promise((resolve, reject) => {
-    WiFiP2PManager.connect(deviceAddress, data => {
-        resolve(data);
+    WiFiP2PManager.connect(deviceAddress, status => {
+        status === null ? resolve() : reject(getError(status));
     })
 });
 
 const disconnect = () => new Promise((resolve, reject) => {
     WiFiP2PManager.disconnect(status => {
-        resolve(status);
+        status === null ? resolve() : reject(getError(status));
     })
 });
 
 const createGroup = () => new Promise((resolve, reject) => {
     WiFiP2PManager.createGroup(reasonCode => {
-        resolve(reasonCode);
+        reasonCode === null ? resolve() : reject(getError(reasonCode));
     })
 });
 
 const removeGroup = () => new Promise((resolve, reject) => {
     WiFiP2PManager.removeGroup(reasonCode => {
-        resolve(reasonCode);
+        reasonCode === null ? resolve() : reject(getError(reasonCode));
     })
 });
 
-const getAvailablePeers = () => new Promise((resolve, reject) => {
+const getAvailablePeers = () => new Promise(resolve => {
     WiFiP2PManager.getAvailablePeersList(peersList => {
         resolve(peersList);
     })
 });
+
+const isSuccessfulInitialize = () => WiFiP2PManager.isSuccessfulInitialize();
 
 //////////////////////////////////////////////////////////////////
 
@@ -68,9 +75,12 @@ const setWiFiState = (isEnabled) => {};
 export {
     // public methods
     initialize,
+    isSuccessfulInitialize,
     startDiscoveringPeers,
     subscribeOnPeersUpdates,
     unsubscribeOnPeersUpdates,
+    subscribeOnConnectionInfoUpdates,
+    unsubscribeOnConnectionInfoUpdates,
     getAvailablePeers,
     connect,
     disconnect,

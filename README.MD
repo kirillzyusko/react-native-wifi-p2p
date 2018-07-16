@@ -1,6 +1,6 @@
 # react-native-wifi-p2p
 
-``react-native-wifi-p2p`` is a build to provide WiFi Direct (Peer-To-Peer, P2P) service to react-native.
+`react-native-wifi-p2p` is a library to provide WiFi Direct (Peer-To-Peer, P2P) service to react-native.
 
 **_Important_**: currently only **Android** support realized.
 If you want to provide iOS support, then you should to note to [react-native-multipeer](https://github.com/lwansbrough/react-native-multipeer) repository.
@@ -63,9 +63,12 @@ npm install react-native-wifi-p2p --save
 ## Overview
 ### API
 * [initialize()](#initialize)
+* [isSuccessfulInitialize()](#issuccessfulinitialize)
 * [startDiscoveringPeers()](#startdiscoveringpeers-promise)
 * [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
 * [unsubscribeOnPeersUpdates(callback)](#unsubscribeonpeersupdatescallback)
+* [subscribeOnConnectionInfoUpdates(callback)](#subscribeonconnectioninfoupdatescallback)
+* [unsubscribeOnConnectionInfoUpdates(callback)](#unsubscribeonconnectioninfoupdatescallback),
 * [getAvailablePeers()](#getavailablepeers)
 * [connect(deviceAddress)](#connectdeviceaddress)
 * [disconnect()](#disconnect)
@@ -75,8 +78,8 @@ npm install react-native-wifi-p2p --save
 * [sendMessage(deviceAddress)]() `future`
 
 ### CONSTANTS
-* [WifiP2pDevice statuses]()
-* [Events of library]()
+* [WifiP2pDevice statuses](#wifip2pdevice-statuses)
+* [Events of library](#events-of-library)
 
 ## API
 ### initialize()
@@ -85,14 +88,29 @@ This method must calling before any using of others method, because here happene
 Recommend to initialize it on root files, but if your application has specific logic, then you can call it before directly using.
 Notice, that recommend called only once.
 
+```javascript
+initialize()
+```
+
+### isSuccessfulInitialize()
+Return boolean status `true/false` of initialization method.
+
+```javascript
+if(isSuccessfulInitialize()) {
+    console.log('Initialization was successfully');
+} else {
+    console.log('Unlucky attempt of initialization. Try again!');
+}
+``` 
+
 ### startDiscoveringPeers(): Promise<string>
 
 `startDiscoveringPeers()` starting emit action to discover available devices. Note, that this function doesn't return any information about available devices/peers. It return information about successfully start.
 
 ```javascript
 startDiscoveringPeers()
-    .then(status => console.log('Starting of discovering was successful'))
-    .cactch(status => console.error('Something is gone wrong. Are you sure, that your WiFi enabled?'));
+    .then(() => console.log('Starting of discovering was successful'))
+    .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
 ```
 
 ### subscribeOnPeersUpdates(callback)
@@ -110,8 +128,13 @@ subscribeOnPeersUpdates(({ devices }) => {
 unsubscribeOnPeersUpdates((event) => console.log(event));
 ```
 
+### subscribeOnConnectionInfoUpdates(callback)
+
+### unsubscribeOnConnectionInfoUpdates(callback)
+
 ### getAvailablePeers()
 If you don't want to always get notification from event emitter, when peers list has changed, you can use this method. This method will return info about nearby devices, that is available for searching, at the time of the call this method.
+**Important:** before using this method you also need to call `startDiscoveringPeers`. In other case you always will get empty array.
 ```javascript
 getAvailablePeers()
     .then(({ devices }) => console.log(devices))
@@ -123,8 +146,8 @@ Connect to network. The devices found from the `subscribeOnPeersUpdates` method.
 
 ```javascript
 connect('22:47:da:9d:58:83')
-    .then(status => console.log('Successfully connected'))
-    .catch(err => console.log('Something gone wrong: ', err));
+    .then(() => console.log('Successfully connected'))
+    .catch(err => console.error('Something gone wrong. Details: ', err));
 ```
 
 ### disconnect()
@@ -133,8 +156,8 @@ Disconnect from network. Should use when you want to reconnect or turn off wifi.
 
 ```javascript
 disconnect()
-    .then(status => console.log('Successfully connected'))
-    .catch(err => console.log('Something gone wrong: ', err));
+    .then(() => console.log('Successfully disconnected'))
+    .catch(err => console.error('Something gone wrong. Details: ', err));
 ```
 
 ### createGroup()
@@ -143,7 +166,8 @@ P2P **STAR** is a peer-to-peer strategy that supports a **1-to-N**, or **star-sh
 
 ```javascript
 createGroup()
-    .then((status) => console.log(`Status of group creation: ${status}`));
+    .then(() => console.log('Group created successfully!'))
+    .catch(err => console.error('Something gone wrong. Details: ', err));
 ```
 
 ### removeGroup()
@@ -151,7 +175,8 @@ Before exit of application you need to call this method, if earlier you created 
 
 ```javascript
 removeGroup()
-    .then(reasonCode => console.log(`Status of operation: ${reasonCode}`));
+    .then(() => console.log('Currently you don\'t belong to group!'))
+    .catch(err => console.error('Something gone wrong. Details: ', err));
 ```
 
 ## CONSTANTS
@@ -175,4 +200,34 @@ import {
     PEERS_UPDATED_ACTION,
     CONNECTION_INFO_UPDATED_ACTION,
  } from 'react-native-android-p2p-wifi';
+```
+
+### Example of usage
+
+```javascript
+import React, { Component } from 'react';
+import {
+    initialize,
+    startDiscoveringPeers
+} from 'react-native-android-p2p-wifi';
+
+class ExampleUsgeP2PModule extends Component {
+    componentDidMount() {
+        initialize();
+        // check on isSuccessfulInitialize() if need
+        startDiscoveringPeers()
+            .then(() => console.log('Starting of discovering was successful'))
+            .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
+        // subscribe to event of peers updates
+        // or get current peers by getAvailablePeers() method
+    }
+    
+    render() {
+        return (
+            <View>
+                <Text></Text>
+            </View>
+        )
+    }
+}
 ```
