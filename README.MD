@@ -60,8 +60,8 @@ npm install react-native-wifi-p2p --save
   ```bash
     react-native link react-native-wifi-p2p
   ```  
-
-## API
+## Overview
+### API
 * [initialize()](#initialize)
 * [startDiscoveringPeers()](#startdiscoveringpeers-promise)
 * [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
@@ -72,6 +72,11 @@ npm install react-native-wifi-p2p --save
 * [sendData(deviceAddress)]() `future`
 * [sendMessage(deviceAddress)]() `future`
 
+### CONSTANTS
+* [WifiP2pDevice statuses]()
+* [Events of library]()
+
+##API
 ### initialize()
 
 This method must calling before any using of others method, because here happened start initialization of `react-native-wifi-p2p` module.
@@ -130,4 +135,27 @@ P2P **STAR** is a peer-to-peer strategy that supports a **1-to-N**, or **star-sh
 ```javascript
 createGroup()
     .then((status) => console.log(`Status of group creation: ${status}`));
+```
+
+## CONSTANTS
+
+### WifiP2pDevice statuses
+
+```javascript
+import {
+    CONNECTED,
+    INVITED,
+    FAILED,
+    AVAILABLE,
+    UNAVAILABLE
+} from 'react-native-android-p2p-wifi/device-info-statuses';
+```
+
+### Events of library
+
+```javascript
+import {
+    PEERS_UPDATED_ACTION,
+    CONNECTION_INFO_UPDATED_ACTION,
+ } from 'react-native-android-p2p-wifi';
 ```
