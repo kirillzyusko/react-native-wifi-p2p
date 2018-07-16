@@ -158,6 +158,7 @@ unsubscribeOnConnectionInfoUpdates((event) => {
 
 ### getAvailablePeers()
 If you don't want to always get notification from event emitter, when peers list has changed, you can use this method. This method will return info about nearby devices, that is available for searching, at the time of the call this method.
+
 **Important:** before using this method you also need to call `startDiscoveringPeers`. In other case you always will get empty array.
 ```javascript
 getAvailablePeers()
