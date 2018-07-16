@@ -1,7 +1,7 @@
 {
   "name": "react-native-wifi-p2p",
   "version": "0.3.2",
-  "description": "",
+  "description": "Module for working with wifi direct (p2p) API module in android.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
