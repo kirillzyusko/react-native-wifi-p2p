@@ -47,14 +47,19 @@ const createGroup = () => new Promise((resolve, reject) => {
     })
 });
 
-//////////////////////////////////////////////////////////////////
+const removeGroup = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.removeGroup(reasonCode => {
+        resolve(reasonCode);
+    })
+});
 
 const getAvailablePeers = () => new Promise((resolve, reject) => {
     WiFiP2PManager.getAvailablePeersList(peersList => {
-        const peers = JSON.parse(peersList);
-        resolve(peers);
+        resolve(peersList);
     })
 });
+
+//////////////////////////////////////////////////////////////////
 
 const isWiFiEnabled = () => true;
 
@@ -66,9 +71,11 @@ export {
     startDiscoveringPeers,
     subscribeOnPeersUpdates,
     unsubscribeOnPeersUpdates,
+    getAvailablePeers,
     connect,
     disconnect,
     createGroup,
+    removeGroup,
 
     // system methods
     addEventListener,
@@ -79,7 +86,6 @@ export {
     CONNECTION_INFO_UPDATED_ACTION,
 
     // future realization
-    getAvailablePeers,
     isWiFiEnabled,
     setWiFiState,
 };

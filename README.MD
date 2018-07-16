@@ -66,9 +66,11 @@ npm install react-native-wifi-p2p --save
 * [startDiscoveringPeers()](#startdiscoveringpeers-promise)
 * [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
 * [unsubscribeOnPeersUpdates(callback)](#unsubscribeonpeersupdatescallback)
+* [getAvailablePeers()](#getavailablepeers)
 * [connect(deviceAddress)](#connectdeviceaddress)
 * [disconnect()](#disconnect)
 * [createGroup()](#creategroup)
+* [removeGroup()](#removegroup)
 * [sendData(deviceAddress)]() `future`
 * [sendMessage(deviceAddress)]() `future`
 
@@ -108,6 +110,13 @@ subscribeOnPeersUpdates(({ devices }) => {
 unsubscribeOnPeersUpdates((event) => console.log(event));
 ```
 
+### getAvailablePeers()
+If you don't want to always get notification from event emitter, when peers list has changed, you can use this method. This method will return info about nearby devices, that is available for searching, at the time of the call this method.
+```javascript
+getAvailablePeers()
+    .then(({ devices }) => console.log(devices))
+```
+
 ### connect(deviceAddress)
 
 Connect to network. The devices found from the `subscribeOnPeersUpdates` method. Should use `deviceAddress` field from necessary device from array. This field represent a `MAC address` that is used to connect.
@@ -135,6 +144,14 @@ P2P **STAR** is a peer-to-peer strategy that supports a **1-to-N**, or **star-sh
 ```javascript
 createGroup()
     .then((status) => console.log(`Status of group creation: ${status}`));
+```
+
+### removeGroup()
+Before exit of application you need to call this method, if earlier you created group via `createGroup()` method.
+
+```javascript
+removeGroup()
+    .then(reasonCode => console.log(`Status of operation: ${reasonCode}`));
 ```
 
 ## CONSTANTS

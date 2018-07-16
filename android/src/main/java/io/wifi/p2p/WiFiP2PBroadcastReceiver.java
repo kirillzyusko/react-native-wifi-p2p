@@ -20,12 +20,13 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 /**
  * Created by zyusk on 15.07.2018.
  */
-public class WiFiBroadcastReceiver extends BroadcastReceiver {
+public class WiFiP2PBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
     private ReactApplicationContext reactContext;
+    private WiFiP2PDeviceMapper mapper = new WiFiP2PDeviceMapper();
 
-    public WiFiBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ReactApplicationContext reactContext) {
+    public WiFiP2PBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ReactApplicationContext reactContext) {
         super();
 
         this.manager = manager;
@@ -50,24 +51,9 @@ public class WiFiBroadcastReceiver extends BroadcastReceiver {
 
     private WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
         @Override
-        public void onPeersAvailable(WifiP2pDeviceList peerList) {
-            WritableArray array = Arguments.createArray();
-
-            for (WifiP2pDevice device : peerList.getDeviceList()) {
-                WritableMap params = Arguments.createMap();
-
-                params.putString("deviceName", device.deviceName);
-                params.putString("deviceAddress", device.deviceAddress);
-                params.putString("primaryDeviceType", device.primaryDeviceType);
-                params.putString("secondaryDeviceType", device.secondaryDeviceType);
-                params.putInt("status", device.status);
-
-                array.pushMap(params);
-            }
-
-            WritableMap params = Arguments.createMap();
-            params.putArray("devices", array);
-            sendEvent(reactContext, "WIFI_P2P:PEERS_UPDATED", params);
+        public void onPeersAvailable(WifiP2pDeviceList deviceList) {
+            WritableMap params = mapper.mapDevicesInfoToReactEntity(deviceList);
+            sendEvent("WIFI_P2P:PEERS_UPDATED", params);
         }
     };
 
@@ -78,11 +64,11 @@ public class WiFiBroadcastReceiver extends BroadcastReceiver {
 
             WritableMap params = Arguments.createMap();
             params.putString("address", groupOwnerAddress);
-            sendEvent(reactContext, "WIFI_P2P:CONNECTION_INFO_UPDATED", params);
+            sendEvent("WIFI_P2P:CONNECTION_INFO_UPDATED", params);
         }
     };
 
-    private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
+    private void sendEvent(String eventName, @Nullable WritableMap params) {
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 }

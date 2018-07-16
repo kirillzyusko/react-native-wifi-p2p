@@ -16,6 +16,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.WritableMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     private WifiP2pManager.Channel channel;
     private ReactApplicationContext reactContext;
     private final IntentFilter intentFilter = new IntentFilter();
-    private ObservableArrayList<WifiP2pDevice> observablePeers = new ObservableArrayList<>();
+    private WiFiP2PDeviceMapper mapper = new WiFiP2PDeviceMapper();
 
     public WiFiP2PManagerModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -60,7 +61,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
             manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
             channel = manager.initialize(activity, getMainLooper(), null);
 
-            WiFiBroadcastReceiver receiver = new WiFiBroadcastReceiver(manager, channel, reactContext);
+            WiFiP2PBroadcastReceiver receiver = new WiFiP2PBroadcastReceiver(manager, channel, reactContext);
             activity.registerReceiver(receiver, intentFilter);
         }
     }
@@ -68,28 +69,6 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public boolean isSuccesfullInitialize() {
         return manager != null && channel != null;
-    }
-
-    @ReactMethod
-    public void getAvailablePeersList(Callback listener) {
-        System.out.println(manager); // null
-        System.out.println(channel);
-        CallbackPeerListener callbackPeerListener = new CallbackPeerListener(listener);
-        observablePeers.addOnListChangedCallback(callbackPeerListener);
-        System.out.println("Try to request peer list");
-        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                System.out.println("SUCCESS DISCOVER PEERS");
-            }
-
-            @Override
-            public void onFailure(int reasonCode) {
-                System.out.println("FAILED DISCOVER PEERS " + reasonCode);
-            }
-        });
-
-        manager.requestPeers(channel, peerListListener);
     }
 
     @ReactMethod
@@ -105,6 +84,33 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
                 System.out.println("WiFi Group creation failed");
                 callback.invoke(reason);
                 //Group creation failed
+            }
+        });
+    }
+
+    @ReactMethod
+    public void removeGroup(final Callback callback) {
+        manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                callback.invoke(true);
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                callback.invoke(reason);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getAvailablePeersList(final Callback callback) {
+        manager.requestPeers(channel, new PeerListListener() {
+            @Override
+            public void onPeersAvailable(WifiP2pDeviceList deviceList) {
+                WritableMap params = mapper.mapDevicesInfoToReactEntity(deviceList);
+                System.out.println(params);
+                callback.invoke(params);
             }
         });
     }
@@ -153,7 +159,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
             public void onSuccess() {
                 callback.invoke(deviceAddress);
                 System.out.println("Connect is successfully");
-                // WiFiBroadcastReceiver notifies us. Ignore for now.
+                // WiFiP2PBroadcastReceiver notifies us. Ignore for now.
             }
 
             @Override
@@ -163,22 +169,4 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
             }
         });
     }
-
-    private PeerListListener peerListListener = new PeerListListener() {
-        @Override
-        public void onPeersAvailable(WifiP2pDeviceList peerList) {
-            System.out.println("onPeersAvailable " + peerList.getDeviceList().size() + " " + peerList.describeContents());
-            List<WifiP2pDevice> refreshedPeers = new ArrayList<>(peerList.getDeviceList());
-            if (!refreshedPeers.equals(observablePeers)) {
-                System.out.println("List was changed");
-                observablePeers.clear();
-                observablePeers.addAll(refreshedPeers);
-            }
-
-            if (observablePeers.size() == 0) {
-                Log.d("PeerListListener", "No devices found");
-                return;
-            }
-        }
-    };
 }
