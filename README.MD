@@ -5,6 +5,18 @@
 **_Important_**: currently only **Android** support realized.
 If you want to provide iOS support, then you should to note to [react-native-multipeer](https://github.com/lwansbrough/react-native-multipeer) repository.
 
+# Contents
+* [Installation](#installation)
+  * [npm install]()
+  * [grand permissions]()
+  * [link library](#link-library)
+    * [Manually](#manually)
+    * [Automatically](#automatically)
+* [Overview API](#overview)
+  * [API methods](#api)
+  * [Consts usage](#constants)
+* [Example of usage](#example-of-usage)
+
 ## Installation
 
 - Install library from `npm`
@@ -89,7 +101,7 @@ Recommend to initialize it on root files, but if your application has specific l
 Notice, that recommend called only once.
 
 ```javascript
-initialize()
+initialize();
 ```
 
 ### isSuccessfulInitialize()
@@ -130,7 +142,19 @@ unsubscribeOnPeersUpdates((event) => console.log(event));
 
 ### subscribeOnConnectionInfoUpdates(callback)
 
+```javascript
+subscribeOnConnectionInfoUpdates((event) => {
+    console.log('Connection Info Updates: ', event);
+});
+```
+
 ### unsubscribeOnConnectionInfoUpdates(callback)
+
+```javascript
+unsubscribeOnConnectionInfoUpdates((event) => {
+    console.log('Unsubscribe from ConnectionInfoUpdates action: ', event);
+});
+```
 
 ### getAvailablePeers()
 If you don't want to always get notification from event emitter, when peers list has changed, you can use this method. This method will return info about nearby devices, that is available for searching, at the time of the call this method.
