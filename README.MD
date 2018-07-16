@@ -36,23 +36,30 @@ npm install react-native-wifi-p2p --save
     ...
 ```
 
-- Append the following lines to `android/settings.gradle`
+## Link library
+  - ##### Manually
+    * Append the following lines to `android/settings.gradle`
 
-```diff
-+ include ':react-native-wifi-p2p'
-+ project(':react-native-wifi-p2p').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wifi-p2p/android')
-```
+    ```
+    include ':react-native-wifi-p2p'
+    project(':react-native-wifi-p2p').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wifi-p2p/android')
+    ```
 
-- Insert the following lines inside the dependencies block in `android/app/build.gradle`:
+    * Insert the following lines inside the dependencies block in `android/app/build.gradle`:
 
-```diff
-+ compile project(':react-native-wifi-p2p')
-```
+    ```
+    compile project(':react-native-wifi-p2p')
+    ```
 
-Open up `android/app/src/main/java/[...]/MainApplication.java`
-
-* Add import `import io.wifi.p2p.WiFiP2PManagerPackage;` to the imports at the top of the file.
-* Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
+    * Open up `android/app/src/main/java/[...]/MainApplication.java`
+    
+        1. Add import `import io.wifi.p2p.WiFiP2PManagerPackage;` to the imports at the top of the file.
+        2. Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
+        
+  - ##### Automatically
+  ```bash
+    react-native link react-native-wifi-p2p
+  ```  
 
 ## API
 * [initialize()](#initialize)
@@ -62,8 +69,8 @@ Open up `android/app/src/main/java/[...]/MainApplication.java`
 * [connect(deviceAddress)](#connectdeviceaddress)
 * [disconnect()](#disconnect)
 * [createGroup()](#creategroup)
-* [sendData]() `future`
-* [sendMessage]() `future`
+* [sendData(deviceAddress)]() `future`
+* [sendMessage(deviceAddress)]() `future`
 
 ### initialize()
 
