@@ -37,7 +37,7 @@ npm install react-native-wifi-p2p --save
 ```
 
 ## Link library
-  - ##### Manually
+  - #### Manually
     * Append the following lines to `android/settings.gradle`
 
     ```
@@ -56,7 +56,7 @@ npm install react-native-wifi-p2p --save
         1. Add import `import io.wifi.p2p.WiFiP2PManagerPackage;` to the imports at the top of the file.
         2. Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
         
-  - ##### Automatically
+  - #### Automatically
   ```bash
     react-native link react-native-wifi-p2p
   ```  
@@ -76,7 +76,7 @@ npm install react-native-wifi-p2p --save
 * [WifiP2pDevice statuses]()
 * [Events of library]()
 
-##API
+## API
 ### initialize()
 
 This method must calling before any using of others method, because here happened start initialization of `react-native-wifi-p2p` module.
