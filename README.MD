@@ -60,6 +60,7 @@ Open up `android/app/src/main/java/[...]/MainApplication.java`
 * [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
 * [unsubscribeOnPeersUpdates(callback)](#unsubscribeonpeersupdatescallback)
 * [connect(deviceAddress)](#connectdeviceaddress)
+* [disconnect()](#disconnect)
 * [createGroup]() `future`
 * [sendData]() `future`
 * [sendMessage]() `future`
@@ -77,8 +78,7 @@ Notice, that recommend called only once.
 ```javascript
 startDiscoveringPeers()
     .then(status => console.log('Starting of discovering was successful'))
-    .cactch(status => console.error('Something is gone wrong. Are you sure, that your WiFi enabled?'))
-})
+    .cactch(status => console.error('Something is gone wrong. Are you sure, that your WiFi enabled?'));
 ```
 
 ### subscribeOnPeersUpdates(callback)
@@ -88,12 +88,12 @@ startDiscoveringPeers()
 ```javascript
 subscribeOnPeersUpdates(({ devices }) => {
     console.log(`New devices available: ${devices}`);
-})
+});
 ```
 
 ### unsubscribeOnPeersUpdates(callback)
 ```javascript
-unsubscribeOnPeersUpdates((event) => console.log(event))
+unsubscribeOnPeersUpdates((event) => console.log(event));
 ```
 
 ### connect(deviceAddress)
@@ -103,5 +103,15 @@ Connect to network. The devices found from the `subscribeOnPeersUpdates` method.
 ```javascript
 connect('22:47:da:9d:58:83')
     .then(status => console.log('Successfully connected'))
-    .catch(err => console.log('Something gone wrong: ', err))
+    .catch(err => console.log('Something gone wrong: ', err));
+```
+
+### disconnect()
+
+Disconnect from network. Should use when you want to reconnect or turn off wifi.
+
+```javascript
+disconnect()
+    .then(status => console.log('Successfully connected'))
+    .catch(err => console.log('Something gone wrong: ', err));
 ```

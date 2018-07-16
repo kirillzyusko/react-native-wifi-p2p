@@ -6,6 +6,9 @@ const WiFiP2PManager = NativeModules.WiFiP2PManagerModule;
 const PEERS_UPDATED_ACTION = 'PEERS_UPDATED';
 const CONNECTION_INFO_UPDATED_ACTION = 'CONNECTION_INFO_UPDATED';
 
+// CONSTS
+const MODULE_NAME = 'WIFI_P2P';
+
 const initialize = () => WiFiP2PManager.init();
 
 const startDiscoveringPeers = () => new Promise((resolve, reject) => {
@@ -15,20 +18,26 @@ const startDiscoveringPeers = () => new Promise((resolve, reject) => {
 });
 
 const addEventListener = (event, callback) => {
-    DeviceEventEmitter.addListener(`WIFI_P2P:${event}`, callback);
+    DeviceEventEmitter.addListener(`${MODULE_NAME}:${event}`, callback);
 };
 
 const removeEventListener = (event, callback) => {
-    DeviceEventEmitter.removeListener(`WIFI_P2P:${event}`, callback);
+    DeviceEventEmitter.removeListener(`${MODULE_NAME}:${event}`, callback);
 };
 
-const subscribeOnPeersUpdates = (callback) => DeviceEventEmitter.addListener(`WIFI_P2P:${PEERS_UPDATED_ACTION}`, callback);
+const subscribeOnPeersUpdates = (callback) => addEventListener(PEERS_UPDATED_ACTION, callback);
 
-const unsubscribeOnPeersUpdates = (callback) => DeviceEventEmitter.removeListener(`WIFI_P2P:${PEERS_UPDATED_ACTION}`, callback);
+const unsubscribeOnPeersUpdates = (callback) => removeEventListener(PEERS_UPDATED_ACTION, callback);
 
 const connect = (deviceAddress) => new Promise((resolve, reject) => {
     WiFiP2PManager.connect(deviceAddress, data => {
         resolve(data);
+    })
+});
+
+const disconnect = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.disconnect(status => {
+        resolve(status);
     })
 });
 
@@ -44,12 +53,15 @@ const isWiFiEnabled = () => true;
 const setWiFiState = (isEnabled) => {};
 
 export {
-    // methods
+    // public methods
     initialize,
     startDiscoveringPeers,
     subscribeOnPeersUpdates,
     unsubscribeOnPeersUpdates,
     connect,
+    disconnect,
+
+    // system methods
     addEventListener,
     removeEventListener,
 
