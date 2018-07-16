@@ -10,7 +10,7 @@ If you want to provide iOS support, then you should to note to [react-native-mul
 - Install library from `npm`
 
 ```sh
-npm install kirikzyusko1996/react-native-wifi-p2p --save
+npm install react-native-wifi-p2p --save
 ```
 
 - Allow grant permission to WiFi module
