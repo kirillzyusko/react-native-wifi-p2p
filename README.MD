@@ -61,7 +61,7 @@ Open up `android/app/src/main/java/[...]/MainApplication.java`
 * [unsubscribeOnPeersUpdates(callback)](#unsubscribeonpeersupdatescallback)
 * [connect(deviceAddress)](#connectdeviceaddress)
 * [disconnect()](#disconnect)
-* [createGroup]() `future`
+* [createGroup()](#creategroup)
 * [sendData]() `future`
 * [sendMessage]() `future`
 
@@ -114,4 +114,13 @@ Disconnect from network. Should use when you want to reconnect or turn off wifi.
 disconnect()
     .then(status => console.log('Successfully connected'))
     .catch(err => console.log('Something gone wrong: ', err));
+```
+
+### createGroup()
+
+P2P **STAR** is a peer-to-peer strategy that supports a **1-to-N**, or **star-shaped**, connection topology. In other words, this enables connecting devices within radio range (~100m) in a star shape, where each device can, at any given time, play the role of either a hub (where it can accept incoming connections from N other devices), or a spoke (where it can initiate an outgoing connection to a single hub), but not both. So achieve this goal you can use `createGroup` method, so create your own group.
+
+```javascript
+createGroup()
+    .then((status) => console.log(`Status of group creation: ${status}`));
 ```

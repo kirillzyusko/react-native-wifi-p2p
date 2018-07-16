@@ -41,6 +41,14 @@ const disconnect = () => new Promise((resolve, reject) => {
     })
 });
 
+const createGroup = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.createGroup(reasonCode => {
+        resolve(reasonCode);
+    })
+});
+
+//////////////////////////////////////////////////////////////////
+
 const getAvailablePeers = () => new Promise((resolve, reject) => {
     WiFiP2PManager.getAvailablePeersList(peersList => {
         const peers = JSON.parse(peersList);
@@ -60,6 +68,7 @@ export {
     unsubscribeOnPeersUpdates,
     connect,
     disconnect,
+    createGroup,
 
     // system methods
     addEventListener,

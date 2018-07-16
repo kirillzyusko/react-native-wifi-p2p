@@ -93,16 +93,33 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void discoverPeers(final Callback listener) {
+    public void createGroup(final Callback callback) {
+        manager.createGroup(channel,  new WifiP2pManager.ActionListener()  {
+            public void onSuccess() {
+                System.out.println("WiFi Group creation successful");
+                callback.invoke(true);
+                //Group creation successful
+            }
+
+            public void onFailure(int reason) {
+                System.out.println("WiFi Group creation failed");
+                callback.invoke(reason);
+                //Group creation failed
+            }
+        });
+    }
+
+    @ReactMethod
+    public void discoverPeers(final Callback callback) {
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                listener.invoke(true);
+                callback.invoke(true);
             }
 
             @Override
             public void onFailure(int reasonCode) {
-                listener.invoke(false);
+                callback.invoke(false);
             }
         });
     }
@@ -123,7 +140,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void connect(final String deviceAddress, final Callback listener) {
+    public void connect(final String deviceAddress, final Callback callback) {
         // Picking the first device found on the network.
         WifiP2pDevice device = new WifiP2pDevice();
 
@@ -134,14 +151,14 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                listener.invoke(deviceAddress);
+                callback.invoke(deviceAddress);
                 System.out.println("Connect is successfully");
                 // WiFiBroadcastReceiver notifies us. Ignore for now.
             }
 
             @Override
             public void onFailure(int reason) {
-                listener.invoke(null);
+                callback.invoke(null);
                 System.out.println("Connect is failure");
             }
         });
