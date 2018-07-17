@@ -45,6 +45,10 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void init() {
+        if (manager != null) { // prevent reinitialization
+            return;
+        }
+
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
