@@ -14,7 +14,7 @@ const initialize = () => WiFiP2PManager.init();
 
 const startDiscoveringPeers = () => new Promise((resolve, reject) => {
     WiFiP2PManager.discoverPeers((reasonCode) => {
-        reasonCode === null ? resolve() : reject(getError(reasonCode));
+        reasonCode === undefined ? resolve() : reject(getError(reasonCode));
     })
 });
 
@@ -36,25 +36,25 @@ const unsubscribeOnConnectionInfoUpdates = (callback) => removeEventListener(CON
 
 const connect = (deviceAddress) => new Promise((resolve, reject) => {
     WiFiP2PManager.connect(deviceAddress, status => {
-        status === null ? resolve() : reject(getError(status));
+        status === undefined ? resolve() : reject(getError(status));
     })
 });
 
 const disconnect = () => new Promise((resolve, reject) => {
     WiFiP2PManager.disconnect(status => {
-        status === null ? resolve() : reject(getError(status));
+        status === undefined ? resolve() : reject(getError(status));
     })
 });
 
 const createGroup = () => new Promise((resolve, reject) => {
     WiFiP2PManager.createGroup(reasonCode => {
-        reasonCode === null ? resolve() : reject(getError(reasonCode));
+        reasonCode === undefined ? resolve() : reject(getError(reasonCode));
     })
 });
 
 const removeGroup = () => new Promise((resolve, reject) => {
     WiFiP2PManager.removeGroup(reasonCode => {
-        reasonCode === null ? resolve() : reject(getError(reasonCode));
+        reasonCode === undefined ? resolve() : reject(getError(reasonCode));
     })
 });
 

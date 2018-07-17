@@ -69,7 +69,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     public void createGroup(final Callback callback) {
         manager.createGroup(channel,  new WifiP2pManager.ActionListener()  {
             public void onSuccess() {
-                callback.invoke(null);
+                callback.invoke();
                 //Group creation successful
             }
 
@@ -85,7 +85,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
         manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                callback.invoke(null);
+                callback.invoke();
             }
 
             @Override
@@ -111,7 +111,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                callback.invoke(null);
+                callback.invoke();
             }
 
             @Override
@@ -126,7 +126,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
         manager.cancelConnect(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                callback.invoke(null);
+                callback.invoke();
             }
 
             @Override
@@ -145,7 +145,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                callback.invoke(null);
+                callback.invoke();
                 // WiFiP2PBroadcastReceiver notifies us. Ignore for now.
             }
 
