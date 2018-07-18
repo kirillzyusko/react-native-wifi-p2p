@@ -60,10 +60,17 @@ public class WiFiP2PBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager.ConnectionInfoListener connectionListener = new WifiP2pManager.ConnectionInfoListener() {
         @Override
         public void onConnectionInfoAvailable(final WifiP2pInfo info) {
-            String groupOwnerAddress = info.groupOwnerAddress.getHostAddress();
+            WritableMap groupOwnerAddress = Arguments.createMap();
+            groupOwnerAddress.putString("hostAddress", info.groupOwnerAddress.getHostAddress());
+            groupOwnerAddress.putString("canonicalHostName", info.groupOwnerAddress.getCanonicalHostName());
+            groupOwnerAddress.putString("hostName", info.groupOwnerAddress.getHostName());
+            groupOwnerAddress.putBoolean("isLoopbackAddress", info.groupOwnerAddress.isLoopbackAddress());
 
             WritableMap params = Arguments.createMap();
-            params.putString("address", groupOwnerAddress);
+            params.putMap("groupOwnerAddress", groupOwnerAddress);
+            params.putBoolean("groupFormed", info.groupFormed);
+            params.putBoolean("isGroupOwner", info.isGroupOwner);
+
             sendEvent("WIFI_P2P:CONNECTION_INFO_UPDATED", params);
         }
     };

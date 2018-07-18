@@ -70,6 +70,12 @@ const isSuccessfulInitialize = () => new Promise(resolve => {
     });
 });
 
+const stopDiscoveringPeers = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.stopPeerDiscovery(reasonCode => {
+        reasonCode === undefined ? resolve() : reject(getError(reasonCode));
+    })
+});
+
 //////////////////////////////////////////////////////////////////
 
 const isWiFiEnabled = () => true;
@@ -81,6 +87,7 @@ export {
     initialize,
     isSuccessfulInitialize,
     startDiscoveringPeers,
+    stopDiscoveringPeers,
     subscribeOnPeersUpdates,
     unsubscribeOnPeersUpdates,
     subscribeOnConnectionInfoUpdates,

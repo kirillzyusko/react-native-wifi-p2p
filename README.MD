@@ -74,20 +74,25 @@ npm install react-native-wifi-p2p --save
   ```  
 ## Overview
 ### API
+#### Initialization
 * [initialize()](#initialize)
 * [isSuccessfulInitialize()](#issuccessfulinitialize)
-* [startDiscoveringPeers()](#startdiscoveringpeers-promise)
+* [startDiscoveringPeers()](#startdiscoveringpeers)
+* [stopDiscoveringPeers()](#stopdiscoveringpeers)
+#### Subscribers & Actions annunciators
 * [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
 * [unsubscribeOnPeersUpdates(callback)](#unsubscribeonpeersupdatescallback)
 * [subscribeOnConnectionInfoUpdates(callback)](#subscribeonconnectioninfoupdatescallback)
-* [unsubscribeOnConnectionInfoUpdates(callback)](#unsubscribeonconnectioninfoupdatescallback),
+* [unsubscribeOnConnectionInfoUpdates(callback)](#unsubscribeonconnectioninfoupdatescallback)
+#### Interaction with other devices
 * [getAvailablePeers()](#getavailablepeers)
 * [connect(deviceAddress)](#connectdeviceaddress)
 * [disconnect()](#disconnect)
 * [createGroup()](#creategroup)
 * [removeGroup()](#removegroup)
-* [sendData(deviceAddress)]() `future`
-* [sendMessage(deviceAddress)]() `future`
+* [getGroupInfo()]() `future`
+* [sendData(deviceAddress, data)]() `future`
+* [sendMessage(deviceAddress, message)]() `future`
 
 ### CONSTANTS
 * [WifiP2pDevice statuses](#wifip2pdevice-statuses)
@@ -112,13 +117,23 @@ isSuccessfulInitialize()
     .then(isSuccessfulInitialize => console.log('isSuccessfulInitialize: ', status));
 ```
 
-### startDiscoveringPeers(): Promise<string>
+### startDiscoveringPeers()
 
 `startDiscoveringPeers()` starting emit action to discover available devices. Note, that this function doesn't return any information about available devices/peers. It return information about successfully start.
 
 ```javascript
 startDiscoveringPeers()
     .then(() => console.log('Starting of discovering was successful'))
+    .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
+```
+
+### stopDiscoveringPeers()
+
+`stopDiscoveringPeers()` prevent emit action to discover available devices. Note, that this function doesn't return any information about available devices/peers. It return information about successfully stopping of discovering.
+
+```javascript
+stopDiscoveringPeers()
+    .then(() => console.log('Stop discovering was successful'))
     .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
 ```
 

@@ -127,6 +127,21 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void stopPeerDiscovery(final Callback callback) {
+        manager.stopPeerDiscovery(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                callback.invoke();
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                callback.invoke(Integer.valueOf(reasonCode));
+            }
+        });
+    }
+
+    @ReactMethod
     public void disconnect(final Callback callback) {
         manager.cancelConnect(channel, new WifiP2pManager.ActionListener() {
             @Override
