@@ -175,4 +175,14 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
             }
         });
     }
+
+    @ReactMethod
+    public void sendFile(Callback callback) {
+        callback.invoke("soon will be");
+    }
+
+    @ReactMethod
+    public void receiveFile(Callback callback) {
+        callback.invoke("soon will be");
+    }
 }

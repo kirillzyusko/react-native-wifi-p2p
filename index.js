@@ -76,6 +76,18 @@ const stopDiscoveringPeers = () => new Promise((resolve, reject) => {
     })
 });
 
+const sendFile = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.sendFile((reasonCode) => {
+        reasonCode === undefined ? resolve() : reject(getError(reasonCode));
+    });
+});
+
+const receiveFile = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.receiveFile((reasonCode) => {
+        reasonCode === undefined ? resolve() : reject(getError(reasonCode));
+    });
+});
+
 //////////////////////////////////////////////////////////////////
 
 const isWiFiEnabled = () => true;
@@ -107,6 +119,8 @@ export {
     CONNECTION_INFO_UPDATED_ACTION,
 
     // future realization
-    isWiFiEnabled,
-    setWiFiState,
+    // isWiFiEnabled,
+    // setWiFiState,
+    // sendFile,
+    // receiveFile
 };

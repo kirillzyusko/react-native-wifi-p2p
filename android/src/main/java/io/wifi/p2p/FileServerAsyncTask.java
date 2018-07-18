@@ -17,12 +17,14 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static io.wifi.p2p.FileTransferService.copyFile;
+
 /**
  * Created by kiryl on 18.7.18.
  * A simple server socket that accepts connection and writes some data on
  * the stream.
  */
-public static class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
+public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
     private Context context;
     private TextView statusText;
     /**
