@@ -58,11 +58,7 @@ const removeGroup = () => new Promise((resolve, reject) => {
     })
 });
 
-const getAvailablePeers = () => new Promise(resolve => {
-    WiFiP2PManager.getAvailablePeersList(peersList => {
-        resolve(peersList);
-    })
-});
+const getAvailablePeers = () => WiFiP2PManager.getAvailablePeersList();
 
 const isSuccessfulInitialize = () => WiFiP2PManager.isSuccessfulInitialize();
 
