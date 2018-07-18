@@ -49,23 +49,23 @@ public class FileTransferService extends IntentService {
             int port = intent.getExtras().getInt(EXTRAS_GROUP_OWNER_PORT);
 
             try {
-                //Log.d(WiFiDirectActivity.TAG, "Opening client socket - ");
+                System.out.println("Opening client socket - ");
                 socket.bind(null);
                 socket.connect((new InetSocketAddress(host, port)), SOCKET_TIMEOUT);
 
-                //Log.d(WiFiDirectActivity.TAG, "Client socket - " + socket.isConnected());
+                System.out.println("Client socket - " + socket.isConnected());
                 OutputStream stream = socket.getOutputStream();
                 ContentResolver cr = context.getContentResolver();
                 InputStream is = null;
                 try {
                     is = cr.openInputStream(Uri.parse(fileUri));
                 } catch (FileNotFoundException e) {
-                    //Log.d(WiFiDirectActivity.TAG, e.toString());
+                    System.err.println(e.getMessage());
                 }
-                //DeviceDetailFragment.copyFile(is, stream);
-                //Log.d(WiFiDirectActivity.TAG, "Client: Data written");
+                copyFile(is, stream);
+                System.out.println("Client: Data written");
             } catch (IOException e) {
-                //Log.e(WiFiDirectActivity.TAG, e.getMessage());
+                System.err.println(e.getMessage());
             } finally {
                 if (socket != null) {
                     if (socket.isConnected()) {
@@ -80,5 +80,21 @@ public class FileTransferService extends IntentService {
             }
 
         }
+    }
+
+    public static boolean copyFile(InputStream inputStream, OutputStream out) {
+        byte buf[] = new byte[1024];
+        int len;
+        try {
+            while ((len = inputStream.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+            out.close();
+            inputStream.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 }
