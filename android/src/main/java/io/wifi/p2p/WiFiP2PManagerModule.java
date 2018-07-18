@@ -65,8 +65,9 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public Boolean isSuccessfulInitialize() {
-        return manager != null && channel != null;
+    public void isSuccessfulInitialize(Callback callback) {
+        Boolean isSuccessfulInitialize = manager != null && channel != null;
+        callback.invoke(isSuccessfulInitialize);
     }
 
     @ReactMethod

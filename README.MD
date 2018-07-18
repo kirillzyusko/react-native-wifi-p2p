@@ -108,12 +108,9 @@ initialize();
 Return boolean status `true/false` of initialization method.
 
 ```javascript
-if(isSuccessfulInitialize()) {
-    console.log('Initialization was successfully');
-} else {
-    console.log('Unlucky attempt of initialization. Try again!');
-}
-``` 
+isSuccessfulInitialize()
+    .then(isSuccessfulInitialize => console.log('isSuccessfulInitialize: ', status));
+```
 
 ### startDiscoveringPeers(): Promise<string>
 
