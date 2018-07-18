@@ -62,8 +62,8 @@ public class WiFiP2PBroadcastReceiver extends BroadcastReceiver {
         public void onConnectionInfoAvailable(final WifiP2pInfo info) {
             WritableMap groupOwnerAddress = Arguments.createMap();
             groupOwnerAddress.putString("hostAddress", info.groupOwnerAddress.getHostAddress());
-            groupOwnerAddress.putString("canonicalHostName", info.groupOwnerAddress.getCanonicalHostName());
-            groupOwnerAddress.putString("hostName", info.groupOwnerAddress.getHostName());
+            //groupOwnerAddress.putString("canonicalHostName", info.groupOwnerAddress.getCanonicalHostName());
+            //groupOwnerAddress.putString("hostName", info.groupOwnerAddress.getHostName());
             groupOwnerAddress.putBoolean("isLoopbackAddress", info.groupOwnerAddress.isLoopbackAddress());
 
             WritableMap params = Arguments.createMap();
