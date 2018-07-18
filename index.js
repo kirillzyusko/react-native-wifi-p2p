@@ -18,21 +18,21 @@ const startDiscoveringPeers = () => new Promise((resolve, reject) => {
     })
 });
 
-const addEventListener = (event, callback) => {
+const subscribeOnEvent = (event, callback) => {
     DeviceEventEmitter.addListener(`${MODULE_NAME}:${event}`, callback);
 };
 
-const removeEventListener = (event, callback) => {
+const unsubscribeFromEvent = (event, callback) => {
     DeviceEventEmitter.removeListener(`${MODULE_NAME}:${event}`, callback);
 };
 
-const subscribeOnPeersUpdates = (callback) => addEventListener(PEERS_UPDATED_ACTION, callback);
+const subscribeOnPeersUpdates = (callback) => subscribeOnEvent(PEERS_UPDATED_ACTION, callback);
 
-const unsubscribeOnPeersUpdates = (callback) => removeEventListener(PEERS_UPDATED_ACTION, callback);
+const unsubscribeFromPeersUpdates = (callback) => unsubscribeFromEvent(PEERS_UPDATED_ACTION, callback);
 
-const subscribeOnConnectionInfoUpdates = (callback) => addEventListener(CONNECTION_INFO_UPDATED_ACTION, callback);
+const subscribeOnConnectionInfoUpdates = (callback) => subscribeOnEvent(CONNECTION_INFO_UPDATED_ACTION, callback);
 
-const unsubscribeOnConnectionInfoUpdates = (callback) => removeEventListener(CONNECTION_INFO_UPDATED_ACTION, callback);
+const unsubscribeFromConnectionInfoUpdates = (callback) => unsubscribeFromEvent(CONNECTION_INFO_UPDATED_ACTION, callback);
 
 const connect = (deviceAddress) => new Promise((resolve, reject) => {
     WiFiP2PManager.connect(deviceAddress, status => {
@@ -89,9 +89,9 @@ export {
     startDiscoveringPeers,
     stopDiscoveringPeers,
     subscribeOnPeersUpdates,
-    unsubscribeOnPeersUpdates,
+    unsubscribeFromPeersUpdates,
     subscribeOnConnectionInfoUpdates,
-    unsubscribeOnConnectionInfoUpdates,
+    unsubscribeFromConnectionInfoUpdates,
     getAvailablePeers,
     connect,
     disconnect,
@@ -99,8 +99,8 @@ export {
     removeGroup,
 
     // system methods
-    addEventListener,
-    removeEventListener,
+    subscribeOnEvent,
+    unsubscribeFromEvent,
 
     // const
     PEERS_UPDATED_ACTION,

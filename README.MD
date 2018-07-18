@@ -49,7 +49,7 @@ npm install react-native-wifi-p2p --save
 ```
 
 ## Link library
-  - #### Manually
+  - ### Manually
     * Append the following lines to `android/settings.gradle`
 
     ```
@@ -68,23 +68,23 @@ npm install react-native-wifi-p2p --save
         1. Add import `import io.wifi.p2p.WiFiP2PManagerPackage;` to the imports at the top of the file.
         2. Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
         
-  - #### Automatically
+  - ### Automatically
   ```bash
     react-native link react-native-wifi-p2p
   ```  
-## Overview
-### API
-#### Initialization
+# Overview
+## API
+### Initialization
 * [initialize()](#initialize)
 * [isSuccessfulInitialize()](#issuccessfulinitialize)
 * [startDiscoveringPeers()](#startdiscoveringpeers)
 * [stopDiscoveringPeers()](#stopdiscoveringpeers)
-#### Subscribers & Actions annunciators
+### Subscribers & Actions annunciators
 * [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
-* [unsubscribeOnPeersUpdates(callback)](#unsubscribeonpeersupdatescallback)
+* [unsubscribeFromPeersUpdates(callback)](#unsubscribefrompeersupdatescallback)
 * [subscribeOnConnectionInfoUpdates(callback)](#subscribeonconnectioninfoupdatescallback)
-* [unsubscribeOnConnectionInfoUpdates(callback)](#unsubscribeonconnectioninfoupdatescallback)
-#### Interaction with other devices
+* [unsubscribeFromConnectionInfoUpdates(callback)](#unsubscribefromconnectioninfoupdatescallback)
+### Interaction with other devices
 * [getAvailablePeers()](#getavailablepeers)
 * [connect(deviceAddress)](#connectdeviceaddress)
 * [disconnect()](#disconnect)
@@ -99,6 +99,7 @@ npm install react-native-wifi-p2p --save
 * [Events of library](#events-of-library)
 
 ## API
+### Initialization
 ### initialize()
 
 This method must calling before any using of others method, because here happened start initialization of `react-native-wifi-p2p` module.
@@ -136,7 +137,7 @@ stopDiscoveringPeers()
     .then(() => console.log('Stop discovering was successful'))
     .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
 ```
-
+## Subscribers & Actions annunciators
 ### subscribeOnPeersUpdates(callback)
 
 `subscribeOnPeersUpdates(callback)` allow to subscribe on events, that will notify about availability of nearby devices.
@@ -147,9 +148,9 @@ subscribeOnPeersUpdates(({ devices }) => {
 });
 ```
 
-### unsubscribeOnPeersUpdates(callback)
+### unsubscribeFromPeersUpdates(callback)
 ```javascript
-unsubscribeOnPeersUpdates((event) => console.log(event));
+unsubscribeFromPeersUpdates((event) => console.log(event));
 ```
 
 ### subscribeOnConnectionInfoUpdates(callback)
@@ -160,14 +161,15 @@ subscribeOnConnectionInfoUpdates((event) => {
 });
 ```
 
-### unsubscribeOnConnectionInfoUpdates(callback)
+### unsubscribeFromConnectionInfoUpdates(callback)
 
 ```javascript
-unsubscribeOnConnectionInfoUpdates((event) => {
+unsubscribeFromConnectionInfoUpdates((event) => {
     console.log('Unsubscribe from ConnectionInfoUpdates action: ', event);
 });
 ```
 
+## Interaction with other devices
 ### getAvailablePeers()
 If you don't want to always get notification from event emitter, when peers list has changed, you can use this method. This method will return info about nearby devices, that is available for searching, at the time of the call this method.
 
@@ -237,6 +239,15 @@ import {
     PEERS_UPDATED_ACTION,
     CONNECTION_INFO_UPDATED_ACTION,
  } from 'react-native-android-p2p-wifi';
+import {
+    subscribeOnEvent,
+    unsubscribeFromEvent,
+} from 'react-native-android-p2p-wifi';
+
+// example of usage
+subscribeOnEvent(PEERS_UPDATED_ACTION, (event) => {
+    console.log(event);
+});
 ```
 
 ### Example of usage
