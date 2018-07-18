@@ -99,7 +99,7 @@ npm install react-native-wifi-p2p --save
 * [Events of library](#events-of-library)
 
 ## API
-### Initialization
+## Initialization
 ### initialize()
 
 This method must calling before any using of others method, because here happened start initialization of `react-native-wifi-p2p` module.
