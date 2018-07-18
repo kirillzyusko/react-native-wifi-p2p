@@ -12,6 +12,7 @@ import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.util.Log;
 import android.databinding.ObservableArrayList;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -65,9 +66,9 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isSuccessfulInitialize(Callback callback) {
+    public void isSuccessfulInitialize(Promise promise) {
         Boolean isSuccessfulInitialize = manager != null && channel != null;
-        callback.invoke(isSuccessfulInitialize);
+        promise.resolve(isSuccessfulInitialize);
     }
 
     @ReactMethod

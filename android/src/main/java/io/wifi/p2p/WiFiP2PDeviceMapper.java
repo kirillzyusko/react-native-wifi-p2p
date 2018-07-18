@@ -39,6 +39,7 @@ public class WiFiP2PDeviceMapper {
         params.putString("deviceAddress", device.deviceAddress);
         params.putString("primaryDeviceType", device.primaryDeviceType);
         params.putString("secondaryDeviceType", device.secondaryDeviceType);
+        params.putBoolean("isGroupOwner", device.isGroupOwner());
         params.putInt("status", device.status);
 
         return params;

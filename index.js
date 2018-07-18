@@ -64,11 +64,7 @@ const getAvailablePeers = () => new Promise(resolve => {
     })
 });
 
-const isSuccessfulInitialize = () => new Promise(resolve => {
-    WiFiP2PManager.isSuccessfulInitialize(status => {
-        resolve(status);
-    });
-});
+const isSuccessfulInitialize = () => WiFiP2PManager.isSuccessfulInitialize();
 
 const stopDiscoveringPeers = () => new Promise((resolve, reject) => {
     WiFiP2PManager.stopPeerDiscovery(reasonCode => {
