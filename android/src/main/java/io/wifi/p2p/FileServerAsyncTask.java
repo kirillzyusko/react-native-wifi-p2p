@@ -6,8 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,14 +24,11 @@ import static io.wifi.p2p.FileTransferService.copyFile;
  */
 public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
     private Context context;
-    private TextView statusText;
     /**
      * @param context
-     * @param statusText
      */
-    public FileServerAsyncTask(Context context, View statusText) {
+    public FileServerAsyncTask(Context context) {
         this.context = context;
-        this.statusText = (TextView) statusText;
     }
     @Override
     protected String doInBackground(Void... params) {
@@ -79,6 +74,6 @@ public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
      */
     @Override
     protected void onPreExecute() {
-        statusText.setText("Opening a server socket");
+        System.out.println("Opening a server socket");
     }
 }

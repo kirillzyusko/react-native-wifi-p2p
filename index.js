@@ -70,12 +70,14 @@ const stopDiscoveringPeers = () => new Promise((resolve, reject) => {
 
 const sendFile = () => new Promise((resolve, reject) => {
     WiFiP2PManager.sendFile((reasonCode) => {
+        console.log(reasonCode);
         reasonCode === undefined ? resolve() : reject(getError(reasonCode));
     });
 });
 
 const receiveFile = () => new Promise((resolve, reject) => {
     WiFiP2PManager.receiveFile((reasonCode) => {
+        console.log(reasonCode);
         reasonCode === undefined ? resolve() : reject(getError(reasonCode));
     });
 });
@@ -101,6 +103,10 @@ export {
     disconnect,
     createGroup,
     removeGroup,
+
+    // experimental
+    sendFile,
+    receiveFile,
 
     // system methods
     subscribeOnEvent,

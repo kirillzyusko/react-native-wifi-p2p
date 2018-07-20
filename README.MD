@@ -93,8 +93,8 @@ react-native link react-native-wifi-p2p
 * [createGroup()](#creategroup)
 * [removeGroup()](#removegroup)
 * [getGroupInfo()]() `future`
-* [sendData(deviceAddress, data)]() `future`
-* [sendMessage(deviceAddress, message)]() `future`
+* [sendData(deviceAddress, data)]() `experimental`
+* [sendMessage(deviceAddress, message)]() `experimental`
 
 ### CONSTANTS
 * [WifiP2pDevice statuses](#wifip2pdevice-statuses)
