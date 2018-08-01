@@ -75,7 +75,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
                 params.putBoolean("groupFormed", wifiP2pInformation.groupFormed);
                 params.putBoolean("isGroupOwner", wifiP2pInformation.isGroupOwner);
 
-                promise.resolve(groupOwnerAddress);
+                promise.resolve(params);
             }
         });
     }
