@@ -1,3 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="io.wifi.p2p">
+    <application>
+        <!-- Used for transferring files  after a successful connection -->
+        <service android:enabled="true" android:name=".FileTransferService" />
+    </application>
 </manifest>
