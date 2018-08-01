@@ -82,6 +82,8 @@ const receiveFile = () => new Promise((resolve, reject) => {
     });
 });
 
+const getConnectionInfo = () => WiFiP2PManager.getConnectionInfo();
+
 //////////////////////////////////////////////////////////////////
 
 const isWiFiEnabled = () => true;
@@ -103,6 +105,7 @@ export {
     disconnect,
     createGroup,
     removeGroup,
+    getConnectionInfo,
 
     // experimental
     sendFile,
