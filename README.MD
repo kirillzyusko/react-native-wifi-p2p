@@ -231,7 +231,7 @@ import {
     FAILED,
     AVAILABLE,
     UNAVAILABLE
-} from 'react-native-android-p2p-wifi/device-info-statuses';
+} from 'react-native-wifi-p2p/device-info-statuses';
 ```
 
 ### Events of library
@@ -240,11 +240,11 @@ import {
 import {
     PEERS_UPDATED_ACTION,
     CONNECTION_INFO_UPDATED_ACTION,
- } from 'react-native-android-p2p-wifi';
+ } from 'react-native-wifi-p2p';
 import {
     subscribeOnEvent,
     unsubscribeFromEvent,
-} from 'react-native-android-p2p-wifi';
+} from 'react-native-wifi-p2p';
 
 // example of usage
 subscribeOnEvent(PEERS_UPDATED_ACTION, (event) => {
@@ -259,7 +259,7 @@ import React, { Component } from 'react';
 import {
     initialize,
     startDiscoveringPeers
-} from 'react-native-android-p2p-wifi';
+} from 'react-native-wifi-p2p';
 
 class ExampleUsgeP2PModule extends Component {
     componentDidMount() {
