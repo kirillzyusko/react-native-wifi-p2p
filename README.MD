@@ -43,8 +43,9 @@ npm install react-native-wifi-p2p --save
 +           android:name="android.permission.ACCESS_WIFI_STATE"/>
 +   <uses-permission
 +           android:required="true"
-+           android:name="android.permission.CHANGE_WIFI_STATE"/>                                              
-
++           android:name="android.permission.CHANGE_WIFI_STATE"/>    
++   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
++   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>                                          
     ...
 ```
 
