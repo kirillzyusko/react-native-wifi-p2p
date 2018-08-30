@@ -94,7 +94,7 @@ react-native link react-native-wifi-p2p
 * [disconnect()](#disconnect)
 * [createGroup()](#creategroup)
 * [removeGroup()](#removegroup)
-* [sendFile(pathToFile)](#sendfilepathtofile)) `unstable/experimental`
+* [sendFile(pathToFile)](#sendfilepathtofile) `unstable/experimental`
 * [receiveFile()]() `unstable/experimental`
 * [getConnectionInfo()]() `temporary`
 * [getGroupInfo()]() `future`
