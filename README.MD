@@ -12,8 +12,6 @@ If you want to provide iOS support, then you should to note to [react-native-mul
   * [npm install]()
   * [grand permissions]()
   * [link library](#link-library)
-    * [Manually](#manually)
-    * [Automatically](#automatically)
 * [Overview API](#overview)
   * [API methods](#api)
   * [Consts usage](#constants)
@@ -51,7 +49,6 @@ npm install react-native-wifi-p2p --save
 ```
 
 ## Link library
-### Manually
 * Append the following lines to `android/settings.gradle`
 
 ```
@@ -69,12 +66,6 @@ compile project(':react-native-wifi-p2p')
     
   - Add import `import io.wifi.p2p.WiFiP2PManagerPackage;` to the imports at the top of the file.
   - Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
-        
-### Automatically
-
-```bash
-react-native link react-native-wifi-p2p
-```
 
 # Overview
 ## API
