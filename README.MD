@@ -88,9 +88,10 @@ compile project(':react-native-wifi-p2p')
 * [removeGroup()](#removegroup)
 * [sendFile(pathToFile)](#sendfilepathtofile) `unstable/experimental`
 * [receiveFile()]() `unstable/experimental`
+* [sendMessage(message)]() `unstable/experimental`
+* [receiveMessage()]() `unstable/experimental`
 * [getConnectionInfo()]() `temporary`
 * [getGroupInfo()]() `future`
-* [sendMessage(deviceAddress, message)]() `future`
 
 ### CONSTANTS
 * [WifiP2pDevice statuses](#wifip2pdevice-statuses)
@@ -221,7 +222,7 @@ You should call this method if you want to copy file from client side to server 
 1. Create group on server side
 2. Connect to server-group from client side
 3. After establishing connection you should call `getConnectionInfo()` on client side
-4. Call `receiveFile()` on server side
+4. Call `receiveFile()` on server side (`receiveFile` return `Promise<string>` - path to saved file)
 5. Call `sendFile(pathToFile)` on client side, after resolving `getConnectionInfo()`
 
 Note: now this method mark as unstable, because:
@@ -262,6 +263,17 @@ PermissionsAndroid.request(
           })
           .catch(err => console.log(err));
 ```
+
+### sendMessage(message)
+You should call this method if you want to copy file from client side to server using wi-fi p2p feature. Before sending you should execute next steps:
+1. Create group on server side
+2. Connect to server-group from client side
+3. After establishing connection you should call `getConnectionInfo()` on client side
+4. Call `receiveMessage()` on server side (`receiveMessage` return `Promise<string>` - message from client)
+5. Call `sendMessage(message)` on client side, after resolving `getConnectionInfo()`
+
+Note: now this method mark as unstable, because this method work async, but currently promise resolved before. It mean, that message will transferring, but promise already will be resolved (`receiveMessage()` resolved as should be)
+
 
 ## CONSTANTS
 

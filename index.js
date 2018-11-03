@@ -70,15 +70,25 @@ const stopDiscoveringPeers = () => new Promise((resolve, reject) => {
 
 const sendFile = (pathToFile) => new Promise((resolve, reject) => {
     WiFiP2PManager.sendFile(pathToFile, (reasonCode) => {
-        console.log(reasonCode);
         reasonCode === undefined ? resolve() : reject(getError(reasonCode));
     });
 });
 
 const receiveFile = () => new Promise((resolve, reject) => {
-    WiFiP2PManager.receiveFile((reasonCode) => {
-        console.log(reasonCode);
+    WiFiP2PManager.receiveFile((pathToFile) => {
+        resolve(pathToFile);
+    });
+});
+
+const sendMessage = (message) => new Promise((resolve, reject) => {
+    WiFiP2PManager.sendMessage(message, (reasonCode) => {
         reasonCode === undefined ? resolve() : reject(getError(reasonCode));
+    });
+});
+
+const receiveMessage = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.receiveMessage((message) => {
+        resolve(message);
     });
 });
 
@@ -110,6 +120,8 @@ export {
     // experimental
     sendFile,
     receiveFile,
+    sendMessage,
+    receiveMessage,
 
     // system methods
     subscribeOnEvent,

@@ -7,13 +7,10 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
-import android.util.Log;
-import android.databinding.ObservableArrayList;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -24,8 +21,6 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableMap;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import static android.os.Looper.getMainLooper;
 
@@ -232,12 +227,12 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
-    public void receiveFile(Callback callback) {
+    public void receiveFile(final Callback callback) {
         manager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
             @Override
             public void onConnectionInfoAvailable(WifiP2pInfo info) {
                 if (info.groupFormed && info.isGroupOwner) {
-                    new FileServerAsyncTask(getCurrentActivity())
+                    new FileServerAsyncTask(getCurrentActivity(), callback)
                             .execute();
                 } else if (info.groupFormed) {
                     // The other device acts as the client. In this case, we enable the
@@ -246,7 +241,35 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
                 // hide the connect button
             }
         });
+    }
+
+    @ReactMethod
+    public void sendMessage(String message, Callback callback) {
+        System.out.println("Sending message: " + message);
+        Intent serviceIntent = new Intent(getCurrentActivity(), MessageTransferService.class);
+        serviceIntent.setAction(MessageTransferService.ACTION_SEND_MESSAGE);
+        serviceIntent.putExtra(MessageTransferService.EXTRAS_DATA, message);
+        serviceIntent.putExtra(MessageTransferService.EXTRAS_GROUP_OWNER_ADDRESS, wifiP2pInfo.groupOwnerAddress.getHostAddress());
+        serviceIntent.putExtra(MessageTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
+        getCurrentActivity().startService(serviceIntent);
 
         callback.invoke("soon will be");
+    }
+
+    @ReactMethod
+    public void receiveMessage(final Callback callback) {
+        manager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
+            @Override
+            public void onConnectionInfoAvailable(WifiP2pInfo info) {
+                if (info.groupFormed && info.isGroupOwner) {
+                    new MessageServerAsyncTask(callback)
+                            .execute();
+                } else if (info.groupFormed) {
+                    // The other device acts as the client. In this case, we enable the
+                    // get file button.
+                }
+                // hide the connect button
+            }
+        });
     }
 }
