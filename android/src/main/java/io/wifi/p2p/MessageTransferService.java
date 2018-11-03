@@ -12,6 +12,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
+import static io.wifi.p2p.Utils.CHARSET;
 import static io.wifi.p2p.Utils.copyBytes;
 
 /**
@@ -53,7 +54,7 @@ public class MessageTransferService extends IntentService {
 
                 System.out.println("Client socket - " + socket.isConnected());
                 OutputStream stream = socket.getOutputStream();
-                InputStream is = new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8")));
+                InputStream is = new ByteArrayInputStream(message.getBytes(Charset.forName(CHARSET)));
                 copyBytes(is, stream);
                 System.out.println("Client: Data written");
             } catch (IOException e) {
