@@ -88,7 +88,7 @@ compile project(':react-native-wifi-p2p')
 * [removeGroup()](#removegroup)
 * [sendFile(pathToFile)](#sendfilepathtofile) `unstable/experimental`
 * [receiveFile()]() `unstable/experimental`
-* [sendMessage(message)]() `unstable/experimental`
+* [sendMessage(message)]($sendmessagemessage) `unstable/experimental`
 * [receiveMessage()]() `unstable/experimental`
 * [getConnectionInfo()]() `temporary`
 * [getGroupInfo()]() `future`
