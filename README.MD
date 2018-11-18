@@ -7,6 +7,8 @@ If you want to provide iOS support, then you should to note to [react-native-mul
 
 **This library will not work on emulator. If you want to use this library, you should test working it on real devices.**
 
+Test project with all API cases you can find [here](https://github.com/kirillzyusko/react-native-wifi-p2p-example).
+
 # Contents
 * [Installation](#installation)
   * [npm install]()
@@ -86,10 +88,10 @@ compile project(':react-native-wifi-p2p')
 * [disconnect()](#disconnect)
 * [createGroup()](#creategroup)
 * [removeGroup()](#removegroup)
-* [sendFile(pathToFile)](#sendfilepathtofile) `unstable/experimental`
-* [receiveFile()]() `unstable/experimental`
-* [sendMessage(message)]($sendmessagemessage) `unstable/experimental`
-* [receiveMessage()]() `unstable/experimental`
+* [sendFile(pathToFile)](#sendfilepathtofile)
+* [receiveFile()]()
+* [sendMessage(message)]($sendmessagemessage)
+* [receiveMessage()]()
 * [getConnectionInfo()]() `temporary`
 * [getGroupInfo()]() `future`
 
@@ -265,14 +267,16 @@ PermissionsAndroid.request(
 ```
 
 ### sendMessage(message)
-You should call this method if you want to copy file from client side to server using wi-fi p2p feature. Before sending you should execute next steps:
-1. Create group on server side
+You should call this method if you want to send from client side to server (group) using wi-fi p2p feature. Before sending you should execute next steps:
+1. Create group on server side (side, which will receive message)
 2. Connect to server-group from client side
-3. After establishing connection you should call `getConnectionInfo()` on client side
+3. After establishing connection you should call `getConnectionInfo()` on client side (also recommend do it on group-server side)
 4. Call `receiveMessage()` on server side (`receiveMessage` return `Promise<string>` - message from client)
 5. Call `sendMessage(message)` on client side, after resolving `getConnectionInfo()`
 
-Note: now this method mark as unstable, because this method work async, but currently promise resolved before. It mean, that message will transferring, but promise already will be resolved (`receiveMessage()` resolved as should be)
+Note: now this method mark as unstable, because this method work async, but currently promise resolved before. It mean, that message will transferring, but promise already will be resolved (`receiveMessage()` works perfectly, and his `Promise` resolved as should be).
+
+Also you cannot send character encoding for string and by default this library uses `UTF-8`.
 
 
 ## CONSTANTS
