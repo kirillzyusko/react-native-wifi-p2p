@@ -55,22 +55,11 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
         manager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
             @Override
             public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInformation) {
-                // todo: replace to mapper
                 System.out.println(wifiP2pInformation);
 
                 wifiP2pInfo = wifiP2pInformation;
-                WritableMap groupOwnerAddress = Arguments.createMap();
-                groupOwnerAddress.putString("hostAddress", wifiP2pInformation.groupOwnerAddress.getHostAddress());
-                //groupOwnerAddress.putString("canonicalHostName", info.groupOwnerAddress.getCanonicalHostName());
-                //groupOwnerAddress.putString("hostName", info.groupOwnerAddress.getHostName());
-                groupOwnerAddress.putBoolean("isLoopbackAddress", wifiP2pInformation.groupOwnerAddress.isLoopbackAddress());
 
-                WritableMap params = Arguments.createMap();
-                params.putMap("groupOwnerAddress", groupOwnerAddress);
-                params.putBoolean("groupFormed", wifiP2pInformation.groupFormed);
-                params.putBoolean("isGroupOwner", wifiP2pInformation.isGroupOwner);
-
-                promise.resolve(params);
+                promise.resolve(mapper.mapWiFiP2PInfoToReactEntity(wifiP2pInformation));
             }
         });
     }

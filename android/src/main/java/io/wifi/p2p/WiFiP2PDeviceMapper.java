@@ -2,6 +2,7 @@ package io.wifi.p2p;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
@@ -41,6 +42,27 @@ public class WiFiP2PDeviceMapper {
         params.putString("secondaryDeviceType", device.secondaryDeviceType);
         params.putBoolean("isGroupOwner", device.isGroupOwner());
         params.putInt("status", device.status);
+
+        return params;
+    }
+
+    public WritableMap mapWiFiP2PInfoToReactEntity(WifiP2pInfo wifiP2pInformation) {
+        WritableMap params = Arguments.createMap();
+
+        if (wifiP2pInformation.groupOwnerAddress != null) {
+            WritableMap groupOwnerAddress = Arguments.createMap();
+            groupOwnerAddress.putString("hostAddress", wifiP2pInformation.groupOwnerAddress.getHostAddress());
+            //groupOwnerAddress.putString("canonicalHostName", info.groupOwnerAddress.getCanonicalHostName());
+            //groupOwnerAddress.putString("hostName", info.groupOwnerAddress.getHostName());
+            groupOwnerAddress.putBoolean("isLoopbackAddress", wifiP2pInformation.groupOwnerAddress.isLoopbackAddress());
+
+            params.putMap("groupOwnerAddress", groupOwnerAddress);
+        } else {
+            params.putNull("groupOwnerAddress");
+        }
+
+        params.putBoolean("groupFormed", wifiP2pInformation.groupFormed);
+        params.putBoolean("isGroupOwner", wifiP2pInformation.isGroupOwner);
 
         return params;
     }

@@ -60,17 +60,7 @@ public class WiFiP2PBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager.ConnectionInfoListener connectionListener = new WifiP2pManager.ConnectionInfoListener() {
         @Override
         public void onConnectionInfoAvailable(final WifiP2pInfo info) {
-            WritableMap groupOwnerAddress = Arguments.createMap();
-            groupOwnerAddress.putString("hostAddress", info.groupOwnerAddress.getHostAddress());
-            //groupOwnerAddress.putString("canonicalHostName", info.groupOwnerAddress.getCanonicalHostName());
-            //groupOwnerAddress.putString("hostName", info.groupOwnerAddress.getHostName());
-            groupOwnerAddress.putBoolean("isLoopbackAddress", info.groupOwnerAddress.isLoopbackAddress());
-
-            WritableMap params = Arguments.createMap();
-            params.putMap("groupOwnerAddress", groupOwnerAddress);
-            params.putBoolean("groupFormed", info.groupFormed);
-            params.putBoolean("isGroupOwner", info.isGroupOwner);
-
+            WritableMap params = mapper.mapWiFiP2PInfoToReactEntity(info);
             sendEvent("WIFI_P2P:CONNECTION_INFO_UPDATED", params);
         }
     };
