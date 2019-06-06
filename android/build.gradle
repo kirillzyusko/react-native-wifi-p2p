@@ -22,7 +22,7 @@ android {
     buildToolsVersion safeExtGet('buildToolsVersion', '28.0.3')
 
     defaultConfig {
-        minSdkVersion minSdkVersion safeExtGet('minSdkVersion', 16)
+        minSdkVersion safeExtGet('minSdkVersion', 16)
         //noinspection OldTargetApi
         targetSdkVersion safeExtGet('targetSdkVersion', 27)
     }
