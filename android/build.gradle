@@ -5,6 +5,7 @@ def safeExtGet(prop, fallback) {
 buildscript {
     repositories {
         jcenter()
+        google()
     }
 
     dependencies {
@@ -37,6 +38,7 @@ repositories {
         // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
         url "$rootDir/../node_modules/react-native/android"
     }
+    google()
 }
 
 dependencies {
