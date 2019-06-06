@@ -9,7 +9,7 @@ buildscript {
 
     dependencies {
         //noinspection GradleDependency
-        classpath rootProject.ext.has('gradleBuildTools') ? rootProject.ext.get('gradleBuildTools') : 'com.android.tools.build:gradle:2.2.3'
+        classpath rootProject.ext.has('gradleBuildTools') ? rootProject.ext.get('gradleBuildTools') : 'com.android.tools.build:gradle:3.3.0'
     }
 }
 
