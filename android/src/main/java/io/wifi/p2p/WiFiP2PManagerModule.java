@@ -35,7 +35,6 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     private ReactApplicationContext reactContext;
     private final IntentFilter intentFilter = new IntentFilter();
     private WiFiP2PDeviceMapper mapper = new WiFiP2PDeviceMapper();
-    private String groupPassword;
 
     public WiFiP2PManagerModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -72,7 +71,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
             @Override
             public void onGroupInfoAvailable(WifiP2pGroup group) {
                 if (group != null) {
-                    groupPassword = group.getPassphrase();
+                    String groupPassword = group.getPassphrase();
                     promise.resolve(groupPassword);
                 }
                 else {
