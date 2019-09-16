@@ -93,6 +93,7 @@ compile project(':react-native-wifi-p2p')
 * [sendMessage(message)]($sendmessagemessage)
 * [receiveMessage()]()
 * [getConnectionInfo()]() `temporary`
+* [getGroupPassphraseInfo()]() `temporary` 
 * [getGroupInfo()]() `future`
 
 ### CONSTANTS
@@ -217,6 +218,20 @@ Before exit of application you need to call this method, if earlier you created 
 removeGroup()
     .then(() => console.log('Currently you don\'t belong to group!'))
     .catch(err => console.error('Something gone wrong. Details: ', err));
+```
+
+### getGroupPassphraseInfo()
+After `createGroup()` method is exectuted, we can call getGroupPassPhraseInfo() to get passphrase required to connect to WiFI Direct group. Only catch is, not able to chain just immediately after createGroup. Instead, we wait for 3 seconds,
+
+
+```javascript
+createGroup()
+      .then(() => {
+        setTimeout(() => {
+          getGroupPassphraseInfo().then(passphrase => console.log(passphrase));
+        }, 3000);
+      })
+      .catch(err => console.error("Something gone wrong. Details: ", err));
 ```
 
 ### sendFile(pathToFIle)
