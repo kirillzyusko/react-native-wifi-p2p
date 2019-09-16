@@ -228,7 +228,7 @@ After `createGroup()` method is exectuted, we can call getGroupPassPhraseInfo() 
 createGroup()
       .then(() => {
         setTimeout(() => {
-          getGroupPassphraseInfo().then(_ => console.log(_));
+          getGroupPassphraseInfo().then(passphrase => console.log(passphrase));
         }, 3000);
       })
       .catch(err => console.error("Something gone wrong. Details: ", err));
