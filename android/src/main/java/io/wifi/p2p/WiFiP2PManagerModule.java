@@ -64,6 +64,25 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
         });
     }
 
+   @ReactMethod
+    public void getGroupPassphraseInfo(final Promise promise) {
+         manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
+            @Override
+            public void onGroupInfoAvailable(WifiP2pGroup group) {
+                System.out.println(group);
+
+                if (group != null)
+                {
+                  groupPassword = group.getPassphrase();
+                  promise.resolve(groupPassword);
+                }
+                else {
+                    promise.resolve("NOT_AVAILABLE");
+                }   
+            }
+        });
+    }
+
     @ReactMethod
     public void init() {
         if (manager != null) { // prevent reinitialization

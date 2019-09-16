@@ -94,6 +94,8 @@ const receiveMessage = () => new Promise((resolve, reject) => {
 
 const getConnectionInfo = () => WiFiP2PManager.getConnectionInfo();
 
+const getGroupPassphraseInfo = () => WiFiP2PManager.getGroupPassphraseInfo();
+
 //////////////////////////////////////////////////////////////////
 
 const isWiFiEnabled = () => true;
@@ -116,7 +118,8 @@ export {
     createGroup,
     removeGroup,
     getConnectionInfo,
-
+    getGroupPassphraseInfo,
+    
     // experimental
     sendFile,
     receiveFile,
