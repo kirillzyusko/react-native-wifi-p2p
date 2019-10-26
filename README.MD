@@ -9,6 +9,16 @@ If you want to provide iOS support, then you should to note to [react-native-mul
 
 Test project with all API cases you can find [here](https://github.com/kirillzyusko/react-native-wifi-p2p-example).
 
+## React Native Compatibility
+To use this library you need to ensure you match up with the correct version of React Native you are using.
+
+p.s. React Native introduced AndroidX support in 0.60, which is a **breaking change** for most libraries (incl. this one) using native Android functionality.
+
+| `@react-native-wifi-p2p` version | Required React Native Version                                                              |
+| ----------------------------------------- | --------------------------------------------------------------------------------- |
+| `1.x.x`                                   | `>= 0.60`                                                                         |
+| `0.x.x`                                   | `<= 0.59`                                                                         |
+
 # Contents
 * [Installation](#installation)
   * [npm install]()
