@@ -14,7 +14,7 @@ To use this library you need to ensure you match up with the correct version of 
 
 p.s. React Native introduced AndroidX support in 0.60, which is a **breaking change** for most libraries (incl. this one) using native Android functionality.
 
-| `@react-native-wifi-p2p` version | Required React Native Version                                                              |
+| `react-native-wifi-p2p` version | Required React Native Version                                                              |
 | ----------------------------------------- | --------------------------------------------------------------------------------- |
 | `1.x.x`                                   | `>= 0.60`                                                                         |
 | `0.x.x`                                   | `<= 0.59`                                                                         |
@@ -99,11 +99,11 @@ compile project(':react-native-wifi-p2p')
 * [createGroup()](#creategroup)
 * [removeGroup()](#removegroup)
 * [sendFile(pathToFile)](#sendfilepathtofile)
-* [receiveFile()]()
 * [sendMessage(message)]($sendmessagemessage)
-* [receiveMessage()]()
+* [receiveFile()](#receivefile)
+* [receiveMessage()](#receivemessage)
+* [getGroupPassphraseInfo()](#getgrouppassphraseinfo) 
 * [getConnectionInfo()]() `temporary`
-* [getGroupPassphraseInfo()]() `temporary` 
 * [getGroupInfo()]() `future`
 
 ### CONSTANTS
@@ -230,10 +230,6 @@ removeGroup()
     .catch(err => console.error('Something gone wrong. Details: ', err));
 ```
 
-### getGroupPassphraseInfo()
-After `createGroup()` method is exectuted, we can call getGroupPassPhraseInfo() to get passphrase required to connect to WiFI Direct group. Only catch is, not able to chain just immediately after createGroup. Instead, we wait for 3 seconds,
-
-
 ```javascript
 createGroup()
       .then(() => {
@@ -302,6 +298,26 @@ You should call this method if you want to send from client side to server (grou
 Note: now this method mark as unstable, because this method work async, but currently promise resolved before. It mean, that message will transferring, but promise already will be resolved (`receiveMessage()` works perfectly, and his `Promise` resolved as should be).
 
 Also you cannot send character encoding for string and by default this library uses `UTF-8`.
+
+
+### getGroupPassphraseInfo()
+After `createGroup()` method is executed, we can call getGroupPassPhraseInfo() to get passphrase required to connect to WiFI Direct group. Only catch is, not able to chain just immediately after createGroup. Instead, we wait for 3 seconds,
+
+### receiveMessage()
+
+If you expect, that someone may send you a message - you can call this method in order to receive it:
+```javascript
+receiveMessage()
+    .then(message => console.log(`Received message: ${message}`))
+```
+
+### receiveFile()
+
+If you expect, that someone may send you a file - you can call this method in order to receive it:
+```javascript
+receiveFile()
+    .then(path => console.log(`Path to file: ${path}`))
+```
 
 
 ## CONSTANTS
@@ -406,8 +422,8 @@ export default class App extends Component<Props> {
 
   disconnectFromDevice = () => {
       disconnect()
-          .then(() => console.log(2423435423, 'Successfully disconnected'))
-          .catch(err => console.error(2423435423, 'Something gone wrong. Details: ', err));
+          .then(() => console.log('Successfully disconnected'))
+          .catch(err => console.error('Something gone wrong. Details: ', err));
   };
 
   onCreateGroup = () => {
@@ -430,7 +446,7 @@ export default class App extends Component<Props> {
 
   onStartInvestigate = () => {
       startDiscoveringPeers()
-          .then(status => console.log(33333333, `Status of discovering peers: ${status}`))
+          .then(status => console.log(`Status of discovering peers: ${status}`))
           .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
   };
 
