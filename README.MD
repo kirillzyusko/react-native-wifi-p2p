@@ -27,6 +27,7 @@ p.s. React Native introduced AndroidX support in 0.60, which is a **breaking cha
 * [Overview API](#overview)
   * [API methods](#api)
   * [Consts usage](#constants)
+  * [Caveats](#caveats)
 * [Example of usage](#example-of-usage)
 
 ## Installation
@@ -62,6 +63,7 @@ npm install react-native-wifi-p2p --save
 ```
 
 ## Link library
+> **Note**: You should skip it if you use react-native >0.60 
 * Append the following lines to `android/settings.gradle`
 
 ```
@@ -352,6 +354,31 @@ subscribeOnEvent(PEERS_UPDATED_ACTION, (event) => {
 });
 ```
 
+## Caveats
+
+On Android >= 6.0 you should ask permissions before usage of this library (since this grants are required):
+
+> **Note:** you can ask this grants before `startDiscoveringPeers`
+
+```javascript
+import { PermissionsAndroid } from 'react-native';
+...
+PermissionsAndroid.request(
+                  PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+                  {
+                      'title': 'Access to wi-fi P2P mode',
+                      'message': 'ACCESS_COARSE_LOCATION'
+                  }
+              )
+          .then(granted => {
+              if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                  console.log("You can use the p2p mode")
+              } else {
+                  console.log("Permission denied: p2p mode will not work")
+              }
+          })
+```
+
 ### Example of usage
 
 ```javascript
@@ -445,9 +472,23 @@ export default class App extends Component<Props> {
   };
 
   onStartInvestigate = () => {
-      startDiscoveringPeers()
-          .then(status => console.log(`Status of discovering peers: ${status}`))
-          .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
+      PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+          {
+              'title': 'Access to wi-fi P2P mode',
+              'message': 'ACCESS_COARSE_LOCATION'
+          }
+      )
+      .then(granted => {
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+              console.log("You can use the p2p mode")
+          } else {
+              console.log("Permission denied: p2p mode will not work")
+          }
+      })
+      .then(() => startDiscoveringPeers())
+      .then(() => console.log(`Peers searching started`))
+      .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
   };
 
   onGetAvailableDevices = () => {
