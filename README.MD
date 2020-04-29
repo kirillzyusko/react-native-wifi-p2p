@@ -97,7 +97,7 @@ compile project(':react-native-wifi-p2p')
 ### Interaction with other devices
 * [getAvailablePeers()](#getavailablepeers)
 * [connect(deviceAddress)](#connectdeviceaddress)
-* [cancelConnect()](#cancelсonnect)
+* [cancelConnect()](#cancelconnect)
 * [createGroup()](#creategroup)
 * [removeGroup()](#removegroup)
 * [sendFile(pathToFile)](#sendfilepathtofile)
