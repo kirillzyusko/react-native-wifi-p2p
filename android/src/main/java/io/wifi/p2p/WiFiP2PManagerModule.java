@@ -180,7 +180,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
-    public void disconnect(final Callback callback) {
+    public void cancelConnect(final Callback callback) {
         manager.cancelConnect(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {

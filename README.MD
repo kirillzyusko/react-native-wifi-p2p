@@ -97,7 +97,7 @@ compile project(':react-native-wifi-p2p')
 ### Interaction with other devices
 * [getAvailablePeers()](#getavailablepeers)
 * [connect(deviceAddress)](#connectdeviceaddress)
-* [disconnect()](#disconnect)
+* [cancelConnect()](#cancelсonnect)
 * [createGroup()](#creategroup)
 * [removeGroup()](#removegroup)
 * [sendFile(pathToFile)](#sendfilepathtofile)
@@ -185,6 +185,7 @@ unsubscribeFromConnectionInfoUpdates((event) => {
 
 ## Interaction with other devices
 ### getAvailablePeers()
+
 If you don't want to always get notification from event emitter, when peers list has changed, you can use this method. This method will return info about nearby devices, that is available for searching, at the time of the call this method.
 
 **Important:** before using this method you also need to call `startDiscoveringPeers`. In other case you always will get empty array.
@@ -203,14 +204,23 @@ connect('22:47:da:9d:58:83')
     .catch(err => console.error('Something gone wrong. Details: ', err));
 ```
 
-### disconnect()
+### cancelConnect()
 
-Disconnect from network. Should use when you want to reconnect or turn off wifi.
+Cancel connection from network. Should use when you want to reconnect or turn off wifi.
 
 ```javascript
-disconnect()
-    .then(() => console.log('Successfully disconnected'))
+cancelConnect()
+    .then(() => console.log('Connection successfully canceled'))
     .catch(err => console.error('Something gone wrong. Details: ', err));
+```
+
+If you want to [disconnect](https://stackoverflow.com/questions/18679481/wifi-direct-end-connection-to-peer-on-android/18792707#18792707), then you can use the following chain of functions:
+
+```javascript
+getGroupPassphraseInfo()
+    .then(() => removeGroup())
+    .then(() => console.log('Succesfully disconnected!'))
+    .catch(err => console.error('Something gone wrong. Details: ', err))
 ```
 
 ### createGroup()
@@ -379,6 +389,8 @@ PermissionsAndroid.request(
           })
 ```
 
+If you are using Android Oreo (8.0) or higher, then you also need to request `FINE_LOCATION` permission, and location [should be enabled](https://stackoverflow.com/questions/50475371/android-wifi-direct-p2p-not-able-to-find-peers-on-android-8/53149375#53149375).
+
 ### Example of usage
 
 ```javascript
@@ -398,7 +410,7 @@ import {
   subscribeOnConnectionInfoUpdates,
   subscribeOnPeersUpdates,
   connect,
-  disconnect,
+  cancelConnect,
   createGroup,
   removeGroup,
   getAvailablePeers,
@@ -447,9 +459,9 @@ export default class App extends Component<Props> {
           .catch(err => console.error('Something gone wrong. Details: ', err));
   };
 
-  disconnectFromDevice = () => {
-      disconnect()
-          .then(() => console.log('Successfully disconnected'))
+  onCancelConnect = () => {
+      cancelConnect()
+          .then(() => console.log('Connection successfully cancelled'))
           .catch(err => console.error('Something gone wrong. Details: ', err));
   };
 
@@ -549,8 +561,8 @@ export default class App extends Component<Props> {
           onPress={this.connectToFirstDevice}
         />
         <Button
-          title="Disconnect"
-          onPress={this.disconnectFromDevice}
+          title="Cancel connect"
+          onPress={this.onCancelConnect}
         />
         <Button
           title="Create group"

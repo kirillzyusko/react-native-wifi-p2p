@@ -40,8 +40,8 @@ const connect = (deviceAddress) => new Promise((resolve, reject) => {
     })
 });
 
-const disconnect = () => new Promise((resolve, reject) => {
-    WiFiP2PManager.disconnect(status => {
+const cancelConnect = () => new Promise((resolve, reject) => {
+    WiFiP2PManager.cancelConnect(status => {
         status === undefined ? resolve() : reject(getError(status));
     })
 });
@@ -96,12 +96,6 @@ const getConnectionInfo = () => WiFiP2PManager.getConnectionInfo();
 
 const getGroupPassphraseInfo = () => WiFiP2PManager.getGroupPassphraseInfo();
 
-//////////////////////////////////////////////////////////////////
-
-const isWiFiEnabled = () => true;
-
-const setWiFiState = (isEnabled) => {};
-
 export {
     // public methods
     initialize,
@@ -114,7 +108,7 @@ export {
     unsubscribeFromConnectionInfoUpdates,
     getAvailablePeers,
     connect,
-    disconnect,
+    cancelConnect,
     createGroup,
     removeGroup,
     getConnectionInfo,
@@ -133,10 +127,4 @@ export {
     // const
     PEERS_UPDATED_ACTION,
     CONNECTION_INFO_UPDATED_ACTION,
-
-    // future realization
-    // isWiFiEnabled,
-    // setWiFiState,
-    // sendFile,
-    // receiveFile
 };
