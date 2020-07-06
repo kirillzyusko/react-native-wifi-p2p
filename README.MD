@@ -1,18 +1,5 @@
 # react-native-wifi-p2p
 
-TODO:
-- -add possibility to customize filePath on receiveFile-
-- -rewrite System.*.println calls to Log.*-
-- -fix promise resolving-
-- -remove `isSuccessfulInitialization` method-
-- -implement getGroupInfo (API <= 17) (https://github.com/kirillzyusko/react-native-wifi-p2p/issues/21)
-- ? fix memory leaks (subscribe events)
-- -getGroupPassphraseInfo <- rewrite to action?
-- -fix documentation (write/read permissions on receiveFile)
-- remove gradlew from npm package
-- remove deprecated methods
-- add documentation for new methods
-
 `react-native-wifi-p2p` is a library to provide WiFi Direct (Peer-To-Peer, P2P) service to react-native.
 
 **_Important_**: currently only **Android** support realized.
@@ -109,6 +96,8 @@ compile project(':react-native-wifi-p2p')
 * [unsubscribeFromPeersUpdates(callback)](#unsubscribefrompeersupdatescallback)
 * [subscribeOnConnectionInfoUpdates(callback)](#subscribeonconnectioninfoupdatescallback)
 * [unsubscribeFromConnectionInfoUpdates(callback)](#unsubscribefromconnectioninfoupdatescallback)
+* [subscribeOnThisDeviceChanged(callback)](#subscribeonthisdevicechangedcallback)
+* [unsubscribeFromThisDeviceChanged(callback)](#unsubscribefromthisdevicechangedcallback)
 
 ### Interaction with other devices
 * [getAvailablePeers()](#getavailablepeers)
@@ -116,13 +105,12 @@ compile project(':react-native-wifi-p2p')
 * [cancelConnect()](#cancelconnect)
 * [createGroup()](#creategroup)
 * [removeGroup()](#removegroup)
+* [getGroupInfo()](#getgroupinfo)
+* [getConnectionInfo()](#getconnectioninfo)
 * [sendFile(pathToFile)](#sendfilepathtofile)
 * [sendMessage(message)]($sendmessagemessage)
 * [receiveFile(folder, fileName)](#receivefilefolderfilename)
 * [receiveMessage()](#receivemessage)
-* [getGroupPassphraseInfo()](#getgrouppassphraseinfo) 
-* [getConnectionInfo()]()
-* [getGroupInfo()]()
 
 ### CONSTANTS
 * [WifiP2pDevice statuses](#wifip2pdevice-statuses)
@@ -162,6 +150,7 @@ stopDiscoveringPeers()
     .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
 ```
 ## Subscribers & Actions annunciators
+
 ### subscribeOnPeersUpdates(callback)
 
 `subscribeOnPeersUpdates(callback)` allow to subscribe on events, that will notify about availability of nearby devices.
@@ -190,6 +179,22 @@ subscribeOnConnectionInfoUpdates((event) => {
 ```javascript
 unsubscribeFromConnectionInfoUpdates((event) => {
     console.log('Unsubscribe from ConnectionInfoUpdates action: ', event);
+});
+```
+
+### subscribeOnThisDeviceChanged(callback)
+
+```javascript
+subscribeOnThisDeviceChanged((event) => {
+    console.log('This device changed: ', event);
+});
+```
+
+### unsubscribeFromThisDeviceChanged(callback)
+
+```javascript
+unsubscribeFromThisDeviceChanged((event) => {
+    console.log('Unsubscribe from ThisDeviceChanged action: ', event);
 });
 ```
 
@@ -262,6 +267,14 @@ createGroup()
       .catch(err => console.error("Something gone wrong. Details: ", err));
 ```
 
+### getGroupInfo()
+
+You can call it after `createGroup()` method is executed. Info from this method also is available in `subscribeOnThisDeviceChanged`. This method was created basically for supporting API <= 17. See [issue](https://github.com/kirillzyusko/react-native-wifi-p2p/issues/21) thread. 
+
+### getConnectionInfo()
+
+This method in the main is used in `sendFile` flow. It's needed for saving `WifiP2pInfo` internally of this library. Also this method returns actual connection information. Fot its usage see description of `sendFile` method.
+
 ### sendFile(pathToFIle)
 You should call this method if you want to copy file from client side to server using wi-fi p2p feature. Before sending you should execute next steps:
 
@@ -315,9 +328,6 @@ You should call this method if you want to send from client side to server (grou
 5. Call `sendMessage(message)` on client side, after resolving `getConnectionInfo()`
 
 _Note_: you cannot send character encoding for string and by default this library uses `UTF-8`.
-
-### getGroupPassphraseInfo()
-After `createGroup()` method is executed, we can call getGroupPassPhraseInfo() to get passphrase required to connect to WiFI Direct group. Only catch is, not able to chain just immediately after createGroup. Instead, we wait for 3 seconds,
 
 ### receiveMessage()
 
@@ -430,7 +440,7 @@ If you are using Android Oreo (8.0) or higher, then you also need to request `FI
 ### Example of usage
 
 ```javascript
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -438,12 +448,13 @@ import {
 } from 'react-native';
 import {
   initialize,
-  isSuccessfulInitialize,
   startDiscoveringPeers,
   stopDiscoveringPeers,
   unsubscribeFromPeersUpdates,
+  unsubscribeFromThisDeviceChanged,
   unsubscribeFromConnectionInfoUpdates,
   subscribeOnConnectionInfoUpdates,
+  subscribeOnThisDeviceChanged,
   subscribeOnPeersUpdates,
   connect,
   cancelConnect,
@@ -452,44 +463,65 @@ import {
   getAvailablePeers,
   sendFile,
   receiveFile,
-  getConnectionInfo
+  getConnectionInfo,
+  getGroupInfo,
+  receiveMessage,
+  sendMessage,
 } from 'react-native-wifi-p2p';
 import { PermissionsAndroid } from 'react-native';
 
 type Props = {};
-export default class App extends Component<Props> {
+export default class App extends PureComponent<Props> {
   state = {
     devices: []
   };
 
-  componentDidMount() {
-    initialize();
-    isSuccessfulInitialize()
-        .then(status => console.log(status));
-    startDiscoveringPeers()
-        .then(() => console.log('Sucessfull'))
-        .catch(err => console.log(err));
+  async componentDidMount() {
+      try {
+          await initialize();
+          // since it's required in Android >= 6.0
+          const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+              {
+                  'title': 'Access to wi-fi P2P mode',
+                  'message': 'ACCESS_COARSE_LOCATION'
+              }
+          );
 
-    subscribeOnPeersUpdates(({ devices }) => this.handleNewPeers(devices));
-    subscribeOnConnectionInfoUpdates(this.handleNewInfo);
+          console.log(granted === PermissionsAndroid.RESULTS.GRANTED ? "You can use the p2p mode" : "Permission denied: p2p mode will not work");
+
+          subscribeOnPeersUpdates(this.handleNewPeers);
+          subscribeOnConnectionInfoUpdates(this.handleNewInfo);
+          subscribeOnThisDeviceChanged(this.handleThisDeviceChanged);
+
+          const status = await startDiscoveringPeers();
+          console.log('startDiscoveringPeers status: ', status);
+      } catch (e) {
+          console.error(e);
+      }
   }
 
   componentWillUnmount() {
-    unsubscribeFromConnectionInfoUpdates((event) => console.log('unsubscribeFromConnectionInfoUpdates', event));
-    unsubscribeFromPeersUpdates((event) => console.log('unsubscribeFromPeersUpdates', event));
+    unsubscribeFromConnectionInfoUpdates(this.handleNewInfo);
+    unsubscribeFromPeersUpdates(this.handleNewPeers);
+    unsubscribeFromThisDeviceChanged(this.handleThisDeviceChanged)
   }
 
-  handleNewInfo = (info, sceondParam) => {
-    console.log(64646776467, info);
+  handleNewInfo = (info) => {
+    console.log('OnConnectionInfoUpdated', info);
   };
 
-  handleNewPeers = (peers) => {
-    console.log(754862162442324, peers);
-    this.setState({ devices: peers });
+  handleNewPeers = ({ devices }) => {
+    console.log('OnPeersUpdated', devices);
+    this.setState({ devices: devices });
+  };
+
+  handleThisDeviceChanged = (groupInfo) => {
+      console.log('THIS_DEVICE_CHANGED_ACTION', groupInfo);
   };
 
   connectToFirstDevice = () => {
-      console.log(this.state.devices[0]);
+      console.log('Connect to: ', this.state.devices[0]);
       connect(this.state.devices[0].deviceAddress)
           .then(() => console.log('Successfully connected'))
           .catch(err => console.error('Something gone wrong. Details: ', err));
@@ -497,8 +529,8 @@ export default class App extends Component<Props> {
 
   onCancelConnect = () => {
       cancelConnect()
-          .then(() => console.log('Connection successfully cancelled'))
-          .catch(err => console.error('Something gone wrong. Details: ', err));
+          .then(() => console.log('cancelConnect', 'Connection successfully canceled'))
+          .catch(err => console.error('cancelConnect', 'Something gone wrong. Details: ', err));
   };
 
   onCreateGroup = () => {
@@ -520,23 +552,9 @@ export default class App extends Component<Props> {
   };
 
   onStartInvestigate = () => {
-      PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-          {
-              'title': 'Access to wi-fi P2P mode',
-              'message': 'ACCESS_COARSE_LOCATION'
-          }
-      )
-      .then(granted => {
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              console.log("You can use the p2p mode")
-          } else {
-              console.log("Permission denied: p2p mode will not work")
-          }
-      })
-      .then(() => startDiscoveringPeers())
-      .then(() => console.log(`Peers searching started`))
-      .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
+      startDiscoveringPeers()
+          .then(status => console.log('startDiscoveringPeers', `Status of discovering peers: ${status}`))
+          .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
   };
 
   onGetAvailableDevices = () => {
@@ -556,9 +574,9 @@ export default class App extends Component<Props> {
               )
           .then(granted => {
               if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                  console.log("You can use the camera")
+                  console.log("You can use the storage")
               } else {
-                  console.log("Camera permission denied")
+                  console.log("Storage permission denied")
               }
           })
           .then(() => {
@@ -572,21 +590,64 @@ export default class App extends Component<Props> {
           })
           .then(() => {
               return sendFile(url)
-                  .then(() => console.log('File sent successfully'))
+                  .then((metaInfo) => console.log('File sent successfully', metaInfo))
                   .catch(err => console.log('Error while file sending', err));
           })
           .catch(err => console.log(err));
   };
 
   onReceiveFile = () => {
-    receiveFile()
-        .then(() => console.log('File received successfully'))
-        .catch(err => console.log('Error while file receiving', err))
+      PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          {
+              'title': 'Access to read',
+              'message': 'READ_EXTERNAL_STORAGE'
+          }
+      )
+          .then(granted => {
+              if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                  console.log("You can use the storage")
+              } else {
+                  console.log("Storage permission denied")
+              }
+          })
+          .then(() => {
+              return PermissionsAndroid.request(
+                  PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                  {
+                      'title': 'Access to write',
+                      'message': 'WRITE_EXTERNAL_STORAGE'
+                  }
+              )
+          })
+          .then(() => {
+              return receiveFile('/storage/emulated/0/Music/', 'BFMV:Letting You Go.mp3')
+                  .then(() => console.log('File received successfully'))
+                  .catch(err => console.log('Error while file receiving', err))
+          })
+          .catch(err => console.log(err));
+  };
+
+  onSendMessage = () => {
+      sendMessage("Hello world!")
+        .then((metaInfo) => console.log('Message sent successfully', metaInfo))
+        .catch(err => console.log('Error while message sending', err));
+  };
+
+  onReceiveMessage = () => {
+      receiveMessage()
+          .then((msg) => console.log('Message received successfully', msg))
+          .catch(err => console.log('Error while message receiving', err))
   };
 
   onGetConnectionInfo = () => {
     getConnectionInfo()
-        .then(info => console.log(info));
+        .then(info => console.log('getConnectionInfo', info));
+  };
+
+  onGetGroupInfo = () => {
+      getGroupInfo()
+        .then(info => console.log('getGroupInfo', info));
   };
 
   render() {
@@ -625,12 +686,24 @@ export default class App extends Component<Props> {
           onPress={this.onGetConnectionInfo}
         />
         <Button
+          title="Get group info"
+          onPress={this.onGetGroupInfo}
+        />
+        <Button
           title="Send file"
           onPress={this.onSendFile}
         />
         <Button
           title="Receive file"
           onPress={this.onReceiveFile}
+        />
+        <Button
+          title="Send message"
+          onPress={this.onSendMessage}
+        />
+        <Button
+          title="Receive message"
+          onPress={this.onReceiveMessage}
         />
       </View>
     );
@@ -655,4 +728,5 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
 ```
