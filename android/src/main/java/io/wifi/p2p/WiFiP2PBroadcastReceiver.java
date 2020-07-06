@@ -46,16 +46,19 @@ public class WiFiP2PBroadcastReceiver extends BroadcastReceiver {
                 manager.requestConnectionInfo(channel, connectionListener);
             }
         } else if (intent.getAction().equals(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)) {
-            this.manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-                @Override
-                public void onGroupInfoAvailable(WifiP2pGroup group) {
-                    if (group != null){
-                        sendEvent("WIFI_P2P:THIS_DEVICE_CHANGED_ACTION", mapper.mapWiFiP2PGroupInfoToReactEntity(group));
-                    }
-                }
-            });
+            this.manager.requestGroupInfo(channel, groupInfoListener);
         }
     }
+
+    private WifiP2pManager.GroupInfoListener groupInfoListener = new WifiP2pManager.GroupInfoListener() {
+        @Override
+        public void onGroupInfoAvailable(WifiP2pGroup group) {
+            if (group != null) {
+                WritableMap params = mapper.mapWiFiP2PGroupInfoToReactEntity(group);
+                sendEvent("WIFI_P2P:THIS_DEVICE_CHANGED_ACTION", params);
+            }
+        }
+    };
 
     private WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
         @Override

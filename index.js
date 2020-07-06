@@ -27,6 +27,10 @@ const unsubscribeFromEvent = (event, callback) => {
     DeviceEventEmitter.removeListener(`${MODULE_NAME}:${event}`, callback);
 };
 
+const subscribeOnThisDeviceChanged = (callback) => subscribeOnEvent(THIS_DEVICE_CHANGED_ACTION, callback);
+
+const unsubscribeFromThisDeviceChanged = (callback) => unsubscribeFromEvent(THIS_DEVICE_CHANGED_ACTION, callback);
+
 const subscribeOnPeersUpdates = (callback) => subscribeOnEvent(PEERS_UPDATED_ACTION, callback);
 
 const unsubscribeFromPeersUpdates = (callback) => unsubscribeFromEvent(PEERS_UPDATED_ACTION, callback);
@@ -85,13 +89,15 @@ const receiveMessage = () => new Promise((resolve, reject) => {
 
 const getConnectionInfo = () => WiFiP2PManager.getConnectionInfo();
 
-const getGroupInfo = () => WiFiP2PManager.getGroupPassphraseInfo();
+const getGroupInfo = () => WiFiP2PManager.getGroupInfo();
 
 export {
     // public methods
     initialize,
     startDiscoveringPeers,
     stopDiscoveringPeers,
+    subscribeOnThisDeviceChanged,
+    unsubscribeFromThisDeviceChanged,
     subscribeOnPeersUpdates,
     unsubscribeFromPeersUpdates,
     subscribeOnConnectionInfoUpdates,
@@ -103,8 +109,6 @@ export {
     removeGroup,
     getConnectionInfo,
     getGroupInfo,
-    
-    // experimental
     sendFile,
     receiveFile,
     sendMessage,

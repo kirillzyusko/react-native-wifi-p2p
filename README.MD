@@ -4,12 +4,14 @@ TODO:
 - -add possibility to customize filePath on receiveFile-
 - -rewrite System.*.println calls to Log.*-
 - -fix promise resolving-
-- fix memory leaks (subscribe events)
+- -remove `isSuccessfulInitialization` method-
+- -implement getGroupInfo (API <= 17) (https://github.com/kirillzyusko/react-native-wifi-p2p/issues/21)
+- ? fix memory leaks (subscribe events)
+- -getGroupPassphraseInfo <- rewrite to action?
+- -fix documentation (write/read permissions on receiveFile)
 - remove gradlew from npm package
 - remove deprecated methods
-- fix documentation (write/read permissions on receiveFile)
-- getGroupPassphraseInfo <- rewrite to action?
-- implement getGroupInfo (API <= 17) (https://github.com/kirillzyusko/react-native-wifi-p2p/issues/21)
+- add documentation for new methods
 
 `react-native-wifi-p2p` is a library to provide WiFi Direct (Peer-To-Peer, P2P) service to react-native.
 
@@ -119,8 +121,8 @@ compile project(':react-native-wifi-p2p')
 * [receiveFile(folder, fileName)](#receivefilefolderfilename)
 * [receiveMessage()](#receivemessage)
 * [getGroupPassphraseInfo()](#getgrouppassphraseinfo) 
-* [getConnectionInfo()]() `temporary`
-* [getGroupInfo()]() `future`
+* [getConnectionInfo()]()
+* [getGroupInfo()]()
 
 ### CONSTANTS
 * [WifiP2pDevice statuses](#wifip2pdevice-statuses)
@@ -262,16 +264,12 @@ createGroup()
 
 ### sendFile(pathToFIle)
 You should call this method if you want to copy file from client side to server using wi-fi p2p feature. Before sending you should execute next steps:
+
 1. Create group on server side
 2. Connect to server-group from client side
 3. After establishing connection you should call `getConnectionInfo()` on client side
 4. Call `receiveFile()` on server side (`receiveFile` return `Promise<string>` - path to saved file)
 5. Call `sendFile(pathToFile)` on client side, after resolving `getConnectionInfo()`
-
-Note: now this method mark as unstable, because:
-1. You can't set folder for receiving file
-2. You can't send additional info about file (file name, file type and so on). Currently it saves like `${currentMsTime}.jpeg`
-3. This method work async, but currently promise resolved before. It mean, that file will transferring, but promise already will be resolved (`receiveFile()` resolved as should be)
 
 ```javascript
 import { PermissionsAndroid } from 'react-native';
@@ -300,8 +298,9 @@ PermissionsAndroid.request(
               )
           })
           .then(() => {
+              // `/storage/emulated/0/Music/Bullet For My Valentine:Letting You Go.mp3` - example of `pathToFIle`
               return sendFile('path/to/file')
-                  .then(() => console.log('File sent successfully'))
+                  .then((metaInfo) => console.log('File sent successfully:', metaInfo))
                   .catch(err => console.log('Error while file sending', err));
           })
           .catch(err => console.log(err));
@@ -315,10 +314,7 @@ You should call this method if you want to send from client side to server (grou
 4. Call `receiveMessage()` on server side (`receiveMessage` return `Promise<string>` - message from client)
 5. Call `sendMessage(message)` on client side, after resolving `getConnectionInfo()`
 
-Note: now this method mark as unstable, because this method work async, but currently promise resolved before. It mean, that message will transferring, but promise already will be resolved (`receiveMessage()` works perfectly, and his `Promise` resolved as should be).
-
-Also you cannot send character encoding for string and by default this library uses `UTF-8`.
-
+_Note_: you cannot send character encoding for string and by default this library uses `UTF-8`.
 
 ### getGroupPassphraseInfo()
 After `createGroup()` method is executed, we can call getGroupPassPhraseInfo() to get passphrase required to connect to WiFI Direct group. Only catch is, not able to chain just immediately after createGroup. Instead, we wait for 3 seconds,
@@ -331,12 +327,44 @@ receiveMessage()
     .then(message => console.log(`Received message: ${message}`))
 ```
 
-### receiveFile()
+### receiveFile(folder, fileName)
 
-If you expect, that someone may send you a file - you can call this method in order to receive it:
+If you expect, that someone may send you a file - you can call this method in order to receive it.
+
+If you want to save file with the same name as it's on client device, then before sending file you can sendMessage about its `fileName`.
+
+_Note:_ if you expect file to be received you should request permissions for writing to the storage:
+
 ```javascript
-receiveFile()
-    .then(path => console.log(`Path to file: ${path}`))
+PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          {
+              'title': 'Access to read',
+              'message': 'READ_EXTERNAL_STORAGE'
+          }
+      )
+          .then(granted => {
+              if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                  console.log("You can use the storage")
+              } else {
+                  console.log("Storage permission denied")
+              }
+          })
+          .then(() => {
+              return PermissionsAndroid.request(
+                  PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                  {
+                      'title': 'Access to write',
+                      'message': 'WRITE_EXTERNAL_STORAGE'
+                  }
+              )
+          })
+          .then(() => {
+              return receiveFile('/storage/emulated/0/Music/', 'BFMV:Letting You Go.mp3')
+                  .then(() => console.log('File received successfully'))
+                  .catch(err => console.log('Error while file receiving', err))
+          })
+          .catch(err => console.log(err));
 ```
 
 
