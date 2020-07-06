@@ -65,7 +65,7 @@ public class FileTransferService extends IntentService {
                     Log.e(TAG, e.getMessage());
                 }
                 copyBytes(is, stream);
-                Log.i(TAG, ("Client: Data written");
+                Log.i(TAG, "Client: Data written");
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
             } finally {
@@ -80,7 +80,6 @@ public class FileTransferService extends IntentService {
                     }
                 }
             }
-
         }
     }
 }

@@ -1,5 +1,14 @@
 # react-native-wifi-p2p
 
+TODO:
+- -add possibility to customize filePath on receiveFile-
+- -rewrite System.*.println calls to Log.*-
+- fix promise resolving
+- remove deprecated methods
+- fix documentation (write/read permissions on receiveFile)
+- getGroupPassphraseInfo <- rewrite to action?
+- implement getGroupInfo (API <= 17) (https://github.com/kirillzyusko/react-native-wifi-p2p/issues/21)
+
 `react-native-wifi-p2p` is a library to provide WiFi Direct (Peer-To-Peer, P2P) service to react-native.
 
 **_Important_**: currently only **Android** support realized.
@@ -83,17 +92,21 @@ compile project(':react-native-wifi-p2p')
   - Add `new WiFiP2PManagerPackage()` to the list returned by the `getPackages()` method. Add a comma to the previous item if there's already something there.
 
 # Overview
+
 ## API
+
 ### Initialization
 * [initialize()](#initialize)
 * [isSuccessfulInitialize()](#issuccessfulinitialize)
 * [startDiscoveringPeers()](#startdiscoveringpeers)
 * [stopDiscoveringPeers()](#stopdiscoveringpeers)
+
 ### Subscribers & Actions annunciators
 * [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
 * [unsubscribeFromPeersUpdates(callback)](#unsubscribefrompeersupdatescallback)
 * [subscribeOnConnectionInfoUpdates(callback)](#subscribeonconnectioninfoupdatescallback)
 * [unsubscribeFromConnectionInfoUpdates(callback)](#unsubscribefromconnectioninfoupdatescallback)
+
 ### Interaction with other devices
 * [getAvailablePeers()](#getavailablepeers)
 * [connect(deviceAddress)](#connectdeviceaddress)
@@ -102,7 +115,7 @@ compile project(':react-native-wifi-p2p')
 * [removeGroup()](#removegroup)
 * [sendFile(pathToFile)](#sendfilepathtofile)
 * [sendMessage(message)]($sendmessagemessage)
-* [receiveFile()](#receivefile)
+* [receiveFile(folder, fileName)](#receivefilefolderfilename)
 * [receiveMessage()](#receivemessage)
 * [getGroupPassphraseInfo()](#getgrouppassphraseinfo) 
 * [getConnectionInfo()]() `temporary`
@@ -113,7 +126,9 @@ compile project(':react-native-wifi-p2p')
 * [Events of library](#events-of-library)
 
 ## API
+
 ## Initialization
+
 ### initialize()
 
 This method must calling before any using of others method, because here happened start initialization of `react-native-wifi-p2p` module.
