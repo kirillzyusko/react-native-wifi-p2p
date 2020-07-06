@@ -216,7 +216,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
-    public void sendFile(String filePath, Callback callback) {
+    public void sendFile(String filePath, final Promise promise) {
         // User has picked a file. Transfer it to group owner i.e peer using FileTransferService
         Uri uri = Uri.fromFile(new File(filePath));
         String hostAddress = wifiP2pInfo.groupOwnerAddress.getHostAddress();
@@ -229,15 +229,15 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
         serviceIntent.putExtra(FileTransferService.REQUEST_RECEIVER_EXTRA, new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
-                System.out.println("Send file is finishing");
-                System.out.println(resultCode + ", " + resultData.toString());
-                System.out.println(resultData.getString("key"));
+                if (resultCode == 0) { // successful transfer
+                    promise.resolve(mapper.mapSendFileBundleToReactEntity(resultData));
+                } else { // error
+                    promise.reject(String.valueOf(resultCode), resultData.getString("error"));
+                }
             }
         });
         serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
         getCurrentActivity().startService(serviceIntent);
-
-        callback.invoke();
     }
 
     @ReactMethod

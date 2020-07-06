@@ -46,12 +46,15 @@ public class FileTransferService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
+        long start = System.currentTimeMillis();
         Context context = getApplicationContext();
         if (intent.getAction().equals(ACTION_SEND_FILE)) {
             String fileUri = intent.getExtras().getString(EXTRAS_FILE_PATH);
             String host = intent.getExtras().getString(EXTRAS_GROUP_OWNER_ADDRESS);
+            ResultReceiver rec = intent.getParcelableExtra(REQUEST_RECEIVER_EXTRA);
             int port = intent.getExtras().getInt(EXTRAS_GROUP_OWNER_PORT);
             Socket socket = new Socket();
+            Bundle bundle = new Bundle();
 
             try {
                 Log.i(TAG, "Opening client socket - ");
@@ -62,20 +65,26 @@ public class FileTransferService extends IntentService {
                 OutputStream stream = socket.getOutputStream();
                 ContentResolver cr = context.getContentResolver();
                 InputStream is = null;
+
                 try {
                     is = cr.openInputStream(Uri.parse(fileUri));
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, e.getMessage());
                 }
+
                 copyBytes(is, stream);
                 Log.i(TAG, "Client: Data written");
 
-                ResultReceiver rec = intent.getParcelableExtra(REQUEST_RECEIVER_EXTRA);
-                Bundle bundle = new Bundle();
-                bundle.putString("key", "value");
+                long time = System.currentTimeMillis() - start;
+                bundle.putLong("time", time);
+                bundle.putString("file", fileUri);
+
                 rec.send(0, bundle);
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
+
+                bundle.putString("error", e.getMessage());
+                rec.send(1, bundle);
             } finally {
                 if (socket != null) {
                     if (socket.isConnected()) {

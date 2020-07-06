@@ -3,7 +3,8 @@
 TODO:
 - -add possibility to customize filePath on receiveFile-
 - -rewrite System.*.println calls to Log.*-
-- fix promise resolving
+- -fix promise resolving-
+- fix memory leaks (subscribe events)
 - remove deprecated methods
 - fix documentation (write/read permissions on receiveFile)
 - getGroupPassphraseInfo <- rewrite to action?

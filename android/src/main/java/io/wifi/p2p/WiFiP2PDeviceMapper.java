@@ -3,6 +3,7 @@ package io.wifi.p2p;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
+import android.os.Bundle;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
@@ -63,6 +64,15 @@ public class WiFiP2PDeviceMapper {
 
         params.putBoolean("groupFormed", wifiP2pInformation.groupFormed);
         params.putBoolean("isGroupOwner", wifiP2pInformation.isGroupOwner);
+
+        return params;
+    }
+
+    public WritableMap mapSendFileBundleToReactEntity(Bundle bundle) {
+        WritableMap params = Arguments.createMap();
+
+        params.putDouble("time", bundle.getLong("time"));
+        params.putString("file", bundle.getString("file"));
 
         return params;
     }
