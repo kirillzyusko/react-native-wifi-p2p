@@ -68,11 +68,7 @@ const stopDiscoveringPeers = () => new Promise((resolve, reject) => {
     })
 });
 
-const sendFile = (pathToFile) => new Promise((resolve, reject) => {
-    WiFiP2PManager.sendFile(pathToFile, (reasonCode) => {
-        reasonCode === undefined ? resolve() : reject(getError(reasonCode));
-    });
-});
+const sendFile = (pathToFile) => WiFiP2PManager.sendFile(pathToFile);
 
 const receiveFile = (folder, fileName) => new Promise((resolve, reject) => {
     WiFiP2PManager.receiveFile(folder, fileName, (pathToFile) => {
