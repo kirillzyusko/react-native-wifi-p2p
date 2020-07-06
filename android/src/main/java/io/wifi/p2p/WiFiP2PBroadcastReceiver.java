@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -42,6 +45,18 @@ public class WiFiP2PBroadcastReceiver extends BroadcastReceiver {
             if (networkInfo.isConnected()) {
                 manager.requestConnectionInfo(channel, connectionListener);
             }
+        } else if (intent.getAction().equals(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)) {
+            this.manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
+                @Override
+                public void onGroupInfoAvailable(WifiP2pGroup group) {
+                    if (group != null){
+                        // clients require these
+                        String ssid = group.getNetworkName();
+                        String passphrase = group.getPassphrase();
+                        Log.i("WIFIP2PEVENT", ssid + ", " + passphrase);
+                    }
+                }
+            });
         }
     }
 

@@ -12,8 +12,8 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
+import android.util.Log;
 
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -34,6 +34,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     private WifiP2pManager.Channel channel;
     private ReactApplicationContext reactContext;
     private final IntentFilter intentFilter = new IntentFilter();
+    private static final String TAG = "RNWiFiP2P";
     private WiFiP2PDeviceMapper mapper = new WiFiP2PDeviceMapper();
 
     public WiFiP2PManagerModule(ReactApplicationContext reactContext) {
@@ -56,7 +57,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
         manager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
             @Override
             public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInformation) {
-                System.out.println(wifiP2pInformation);
+                Log.i(TAG, wifiP2pInformation.toString());
 
                 wifiP2pInfo = wifiP2pInformation;
 
@@ -112,13 +113,11 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     public void createGroup(final Callback callback) {
         manager.createGroup(channel,  new WifiP2pManager.ActionListener()  {
             public void onSuccess() {
-                callback.invoke();
-                //Group creation successful
+                callback.invoke(); // Group creation successful
             }
 
             public void onFailure(int reason) {
-                callback.invoke(Integer.valueOf(reason));
-                //Group creation failed
+                callback.invoke(Integer.valueOf(reason)); // Group creation failed
             }
         });
     }
@@ -216,11 +215,10 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
 
     @ReactMethod
     public void sendFile(String filePath, Callback callback) {
-        // User has picked an image. Transfer it to group owner i.e peer using
-        // FileTransferService.
+        // User has picked a file. Transfer it to group owner i.e peer using FileTransferService
         Uri uri = Uri.fromFile(new File(filePath));
-        System.out.println("Sending: " + uri);
-        System.out.println("Intent----------- " + uri);
+        Log.i(TAG, "Sending: " + uri);
+        Log.i(TAG, "Intent----------- " + uri);
         Intent serviceIntent = new Intent(getCurrentActivity(), FileTransferService.class);
         serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
         serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
@@ -233,12 +231,13 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
-    public void receiveFile(final Callback callback) {
+    public void receiveFile(String folder, String fileName, final Callback callback) {
+        final String destination = folder + fileName;
         manager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
             @Override
             public void onConnectionInfoAvailable(WifiP2pInfo info) {
                 if (info.groupFormed && info.isGroupOwner) {
-                    new FileServerAsyncTask(getCurrentActivity(), callback)
+                    new FileServerAsyncTask(getCurrentActivity(), callback, destination)
                             .execute();
                 } else if (info.groupFormed) {
                     // The other device acts as the client. In this case, we enable the
@@ -251,7 +250,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
 
     @ReactMethod
     public void sendMessage(String message, Callback callback) {
-        System.out.println("Sending message: " + message);
+        Log.i(TAG, "Sending message: " + message);
         Intent serviceIntent = new Intent(getCurrentActivity(), MessageTransferService.class);
         serviceIntent.setAction(MessageTransferService.ACTION_SEND_MESSAGE);
         serviceIntent.putExtra(MessageTransferService.EXTRAS_DATA, message);

@@ -74,8 +74,8 @@ const sendFile = (pathToFile) => new Promise((resolve, reject) => {
     });
 });
 
-const receiveFile = () => new Promise((resolve, reject) => {
-    WiFiP2PManager.receiveFile((pathToFile) => {
+const receiveFile = (folder, fileName) => new Promise((resolve, reject) => {
+    WiFiP2PManager.receiveFile(folder, fileName, (pathToFile) => {
         resolve(pathToFile);
     });
 });

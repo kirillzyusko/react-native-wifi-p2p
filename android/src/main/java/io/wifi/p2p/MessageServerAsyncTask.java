@@ -1,6 +1,8 @@
 package io.wifi.p2p;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,6 +19,7 @@ import static io.wifi.p2p.Utils.CHARSET;
  * the stream.
  */
 public class MessageServerAsyncTask extends AsyncTask<Void, Void, String> {
+    private static final String TAG = "RNWiFiP2P";
     private Callback callback;
 
     /**
@@ -44,9 +47,9 @@ public class MessageServerAsyncTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         try {
             ServerSocket serverSocket = new ServerSocket(8988);
-            System.out.println("Server: Socket opened");
+            Log.i(TAG, "Server: Socket opened");
             Socket client = serverSocket.accept();
-            System.out.println("Server: connection done");
+            Log.i(TAG, "Server: connection done");
 
             InputStream inputstream = client.getInputStream();
             String result = convertStreamToString(inputstream);
@@ -55,7 +58,7 @@ public class MessageServerAsyncTask extends AsyncTask<Void, Void, String> {
 
             return result;
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            Log.e(TAG, e.getMessage());
             return null;
         }
     }
@@ -66,6 +69,6 @@ public class MessageServerAsyncTask extends AsyncTask<Void, Void, String> {
      */
     @Override
     protected void onPreExecute() {
-        System.out.println("Opening a server socket");
+        Log.i(TAG, "Opening a server socket");
     }
 }

@@ -3,6 +3,7 @@ package io.wifi.p2p;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class MessageTransferService extends IntentService {
     public static final String EXTRAS_DATA = "message";
     public static final String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
     public static final String EXTRAS_GROUP_OWNER_PORT = "go_port";
+    private static final String TAG = "RNWiFiP2P";
 
     public MessageTransferService(String name) {
         super(name);
@@ -39,26 +41,25 @@ public class MessageTransferService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
-
         Context context = getApplicationContext();
         if (intent.getAction().equals(ACTION_SEND_MESSAGE)) {
             String message = intent.getExtras().getString(EXTRAS_DATA);
             String host = intent.getExtras().getString(EXTRAS_GROUP_OWNER_ADDRESS);
-            Socket socket = new Socket();
             int port = intent.getExtras().getInt(EXTRAS_GROUP_OWNER_PORT);
+            Socket socket = new Socket();
 
             try {
-                System.out.println("Opening client socket - ");
+                Log.i(TAG, "Opening client socket - ");
                 socket.bind(null);
                 socket.connect((new InetSocketAddress(host, port)), SOCKET_TIMEOUT);
 
-                System.out.println("Client socket - " + socket.isConnected());
+                Log.i(TAG, "Client socket connected - " + socket.isConnected());
                 OutputStream stream = socket.getOutputStream();
                 InputStream is = new ByteArrayInputStream(message.getBytes(Charset.forName(CHARSET)));
                 copyBytes(is, stream);
-                System.out.println("Client: Data written");
+                Log.i(TAG, "Client: Data written");
             } catch (IOException e) {
-                System.err.println(e.getMessage());
+                Log.e(TAG, e.getMessage());
             } finally {
                 if (socket != null) {
                     if (socket.isConnected()) {
@@ -71,7 +72,6 @@ public class MessageTransferService extends IntentService {
                     }
                 }
             }
-
         }
     }
 }

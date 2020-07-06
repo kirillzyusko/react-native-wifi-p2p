@@ -1,5 +1,7 @@
 package io.wifi.p2p;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,6 +12,8 @@ import java.io.OutputStream;
 
 public class Utils {
     public static final String CHARSET = "UTF-8";
+    private static final String TAG = "RNWiFiP2P";
+
     public static boolean copyBytes(InputStream inputStream, OutputStream out) {
         byte buf[] = new byte[1024];
         int len;
@@ -20,7 +24,7 @@ public class Utils {
             out.close();
             inputStream.close();
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            Log.e(TAG, e.getMessage());
             return false;
         }
         return true;
