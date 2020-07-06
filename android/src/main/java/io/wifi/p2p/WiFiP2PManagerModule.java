@@ -68,13 +68,12 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
-    public void getGroupPassphraseInfo(final Promise promise) {
+    public void getGroupInfo(final Promise promise) {
         manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
             @Override
             public void onGroupInfoAvailable(WifiP2pGroup group) {
                 if (group != null) {
-                    String groupPassword = group.getPassphrase();
-                    promise.resolve(groupPassword);
+                    promise.resolve(mapper.mapWiFiP2PGroupInfoToReactEntity(group));
                 }
                 else {
                     promise.resolve(null);
@@ -207,8 +206,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                callback.invoke();
-                // WiFiP2PBroadcastReceiver notifies us. Ignore for now.
+                callback.invoke(); // WiFiP2PBroadcastReceiver notifies us. Ignore for now.
             }
 
             @Override
@@ -253,10 +251,8 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
                     new FileServerAsyncTask(getCurrentActivity(), callback, destination)
                             .execute();
                 } else if (info.groupFormed) {
-                    // The other device acts as the client. In this case, we enable the
-                    // get file button.
+                    // The other device acts as the client
                 }
-                // hide the connect button
             }
         });
     }
@@ -291,10 +287,8 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
                     new MessageServerAsyncTask(callback)
                             .execute();
                 } else if (info.groupFormed) {
-                    // The other device acts as the client. In this case, we enable the
-                    // get file button.
+                    // The other device acts as the client
                 }
-                // hide the connect button
             }
         });
     }

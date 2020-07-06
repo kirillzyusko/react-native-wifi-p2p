@@ -50,10 +50,7 @@ public class WiFiP2PBroadcastReceiver extends BroadcastReceiver {
                 @Override
                 public void onGroupInfoAvailable(WifiP2pGroup group) {
                     if (group != null){
-                        // clients require these
-                        String ssid = group.getNetworkName();
-                        String passphrase = group.getPassphrase();
-                        Log.i("WIFIP2PEVENT", ssid + ", " + passphrase);
+                        sendEvent("WIFI_P2P:THIS_DEVICE_CHANGED_ACTION", mapper.mapWiFiP2PGroupInfoToReactEntity(group));
                     }
                 }
             });

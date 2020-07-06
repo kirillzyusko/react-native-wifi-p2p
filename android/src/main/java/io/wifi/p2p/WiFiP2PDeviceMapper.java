@@ -2,6 +2,7 @@ package io.wifi.p2p;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Bundle;
 
@@ -64,6 +65,32 @@ public class WiFiP2PDeviceMapper {
 
         params.putBoolean("groupFormed", wifiP2pInformation.groupFormed);
         params.putBoolean("isGroupOwner", wifiP2pInformation.isGroupOwner);
+
+        return params;
+    }
+
+    public WritableMap mapWiFiP2PGroupInfoToReactEntity(WifiP2pGroup group) {
+        WritableMap params = Arguments.createMap();
+
+        params.putString("interface", group.getInterface());
+        params.putString("networkName", group.getNetworkName());
+        params.putString("passphrase", group.getPassphrase());
+
+        WifiP2pDevice groupOwner = group.getOwner();
+
+        if (group.getOwner() != null) {
+            WritableMap owner = Arguments.createMap();
+
+            owner.putString("deviceAddress", groupOwner.deviceAddress);
+            owner.putString("deviceName", groupOwner.deviceName);
+            owner.putInt("status", groupOwner.status);
+            owner.putString("primaryDeviceType", groupOwner.primaryDeviceType);
+            owner.putString("secondaryDeviceType", groupOwner.secondaryDeviceType);
+
+            params.putMap("owner", owner);
+        } else {
+            params.putNull("owner");
+        }
 
         return params;
     }

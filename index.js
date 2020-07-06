@@ -6,6 +6,7 @@ const WiFiP2PManager = NativeModules.WiFiP2PManagerModule;
 // ACTIONS
 const PEERS_UPDATED_ACTION = 'PEERS_UPDATED';
 const CONNECTION_INFO_UPDATED_ACTION = 'CONNECTION_INFO_UPDATED';
+const THIS_DEVICE_CHANGED_ACTION = 'THIS_DEVICE_CHANGED_ACTION';
 
 // CONSTS
 const MODULE_NAME = 'WIFI_P2P';
@@ -84,12 +85,11 @@ const receiveMessage = () => new Promise((resolve, reject) => {
 
 const getConnectionInfo = () => WiFiP2PManager.getConnectionInfo();
 
-const getGroupPassphraseInfo = () => WiFiP2PManager.getGroupPassphraseInfo();
+const getGroupInfo = () => WiFiP2PManager.getGroupPassphraseInfo();
 
 export {
     // public methods
     initialize,
-    isSuccessfulInitialize,
     startDiscoveringPeers,
     stopDiscoveringPeers,
     subscribeOnPeersUpdates,
@@ -102,7 +102,7 @@ export {
     createGroup,
     removeGroup,
     getConnectionInfo,
-    getGroupPassphraseInfo,
+    getGroupInfo,
     
     // experimental
     sendFile,
@@ -117,4 +117,5 @@ export {
     // const
     PEERS_UPDATED_ACTION,
     CONNECTION_INFO_UPDATED_ACTION,
+    THIS_DEVICE_CHANGED_ACTION,
 };
