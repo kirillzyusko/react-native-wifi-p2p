@@ -12,6 +12,8 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
@@ -217,17 +219,25 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     public void sendFile(String filePath, Callback callback) {
         // User has picked a file. Transfer it to group owner i.e peer using FileTransferService
         Uri uri = Uri.fromFile(new File(filePath));
+        String hostAddress = wifiP2pInfo.groupOwnerAddress.getHostAddress();
         Log.i(TAG, "Sending: " + uri);
         Log.i(TAG, "Intent----------- " + uri);
         Intent serviceIntent = new Intent(getCurrentActivity(), FileTransferService.class);
         serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
         serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
-        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_ADDRESS,
-                wifiP2pInfo.groupOwnerAddress.getHostAddress());
+        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_ADDRESS, hostAddress);
+        serviceIntent.putExtra(FileTransferService.REQUEST_RECEIVER_EXTRA, new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                System.out.println("Send file is finishing");
+                System.out.println(resultCode + ", " + resultData.toString());
+                System.out.println(resultData.getString("key"));
+            }
+        });
         serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
         getCurrentActivity().startService(serviceIntent);
 
-        callback.invoke("soon will be");
+        callback.invoke();
     }
 
     @ReactMethod

@@ -5,6 +5,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import java.io.FileNotFoundException;
@@ -27,6 +29,7 @@ public class FileTransferService extends IntentService {
     public static final String EXTRAS_FILE_PATH = "file_url";
     public static final String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
     public static final String EXTRAS_GROUP_OWNER_PORT = "go_port";
+    public static final String REQUEST_RECEIVER_EXTRA = "REQUEST_RECEIVER_EXTRA";
     private static final String TAG = "RNWiFiP2P";
 
     public FileTransferService(String name) {
@@ -66,6 +69,11 @@ public class FileTransferService extends IntentService {
                 }
                 copyBytes(is, stream);
                 Log.i(TAG, "Client: Data written");
+
+                ResultReceiver rec = intent.getParcelableExtra(REQUEST_RECEIVER_EXTRA);
+                Bundle bundle = new Bundle();
+                bundle.putString("key", "value");
+                rec.send(0, bundle);
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
             } finally {
