@@ -337,7 +337,7 @@ _Note_: you cannot send character encoding for string and by default this librar
 
 If you expect, that someone may send you a file - you can call this method in order to receive it.
 
-If you want to save file with the same name as it's on client device, then before sending file you can sendMessage about its `fileName`.
+If you want to save file with the same name as it's on client device, then before sending file you can `sendMessage` about its `fileName`.
 
 _Note:_ if you expect file to be received you should request permissions for writing to the storage:
 
