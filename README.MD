@@ -21,8 +21,8 @@ p.s. React Native introduced AndroidX support in 0.60, which is a **breaking cha
 
 # Contents
 * [Installation](#installation)
-  * [npm install](#installlibraryfromnpm)
-  * [grand permissions](#allowgrantpermissiontowifimodule)
+  * [npm install](#install-library-from-npm)
+  * [grand permissions](#allow-grant-permission-to-wifi-module)
   * [link library](#link-library)
 * [Overview API](#overview)
   * [API methods](#api)
@@ -64,7 +64,7 @@ npm install react-native-wifi-p2p --save
     ...
 ```
 
-## Link library
+### Link library
 > **Note**: You should skip it if you use react-native >0.60 
 * Append the following lines to `android/settings.gradle`
 
@@ -234,7 +234,7 @@ cancelConnect()
 If you want to [disconnect](https://stackoverflow.com/questions/18679481/wifi-direct-end-connection-to-peer-on-android/18792707#18792707), then you can use the following chain of functions:
 
 ```javascript
-getGroupPassphraseInfo()
+getGroupInfo()
     .then(() => removeGroup())
     .then(() => console.log('Succesfully disconnected!'))
     .catch(err => console.error('Something gone wrong. Details: ', err))
@@ -275,15 +275,15 @@ You can call it after `createGroup()` method is executed. Info from this method 
 
 ### getConnectionInfo()
 
-This method in the main is used in `sendFile` flow. It's needed for saving `WifiP2pInfo` internally of this library. Also this method returns actual connection information. Fot its usage see description of `sendFile` method.
+This method in the main is used in `sendFile()` flow. It's needed for saving `WifiP2pInfo` internally of this library. Also this method returns actual connection information. Fot its usage see description of `sendFile` method.
 
-### sendFile(pathToFIle)
+### sendFile(pathToFile)
 You should call this method if you want to copy file from client side to server using wi-fi p2p feature. Before sending you should execute next steps:
 
 1. Create group on server side
 2. Connect to server-group from client side
 3. After establishing connection you should call `getConnectionInfo()` on client side
-4. Call `receiveFile()` on server side (`receiveFile` return `Promise<string>` - path to saved file)
+4. Call `receiveFile(directory, fileName)` on server side (`receiveFile` return `Promise<string>` - path to saved file)
 5. Call `sendFile(pathToFile)` on client side, after resolving `getConnectionInfo()`
 
 ```javascript
@@ -400,10 +400,11 @@ import {
 import {
     PEERS_UPDATED_ACTION,
     CONNECTION_INFO_UPDATED_ACTION,
+    THIS_DEVICE_CHANGED_ACTION
  } from 'react-native-wifi-p2p';
 import {
     subscribeOnEvent,
-    unsubscribeFromEvent,
+    unsubscribeFromEvent
 } from 'react-native-wifi-p2p';
 
 // example of usage
