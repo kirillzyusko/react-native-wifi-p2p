@@ -21,8 +21,8 @@ p.s. React Native introduced AndroidX support in 0.60, which is a **breaking cha
 
 # Contents
 * [Installation](#installation)
-  * [npm install]()
-  * [grand permissions]()
+  * [npm install](#installlibraryfromnpm)
+  * [grand permissions](#allowgrantpermissiontowifimodule)
   * [link library](#link-library)
 * [Overview API](#overview)
   * [API methods](#api)
@@ -32,13 +32,15 @@ p.s. React Native introduced AndroidX support in 0.60, which is a **breaking cha
 
 ## Installation
 
-- Install library from `npm`
+### Install library from `npm`
 
 ```sh
 npm install react-native-wifi-p2p --save
+# or with yarn
+# yarn add react-native-wifi-p2p
 ```
 
-- Allow grant permission to WiFi module
+### Allow grant permission to WiFi module
 
 ```diff
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
