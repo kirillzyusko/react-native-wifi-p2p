@@ -129,7 +129,9 @@ Recommend to initialize it on root files, but if your application has specific l
 Notice, that recommend called only once.
 
 ```javascript
-initialize();
+initialize()
+    .then((isInitializedSuccessfully) => console.log('isInitializedSuccessfully: ', isInitializedSuccessfully))
+    .catch((err) => console.log('initialization was failed. Err: ', err));
 ```
 
 ### startDiscoveringPeers()
