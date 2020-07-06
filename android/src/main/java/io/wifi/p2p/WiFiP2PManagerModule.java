@@ -35,7 +35,6 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
     private ReactApplicationContext reactContext;
-    private final IntentFilter intentFilter = new IntentFilter();
     private static final String TAG = "RNWiFiP2P";
     private WiFiP2PDeviceMapper mapper = new WiFiP2PDeviceMapper();
 
@@ -85,10 +84,12 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
-    public void init() {
+    public void init(Promise promise) {
         if (manager != null) { // prevent reinitialization
             return;
         }
+
+        IntentFilter intentFilter = new IntentFilter();
 
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
@@ -102,7 +103,11 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
 
             WiFiP2PBroadcastReceiver receiver = new WiFiP2PBroadcastReceiver(manager, channel, reactContext);
             activity.registerReceiver(receiver, intentFilter);
+
+            promise.resolve("Initialized successfully");
         }
+
+        promise.reject("0xE", this.getName() + " module can not be initialized, since main activity is `null`");
     }
 
     @ReactMethod

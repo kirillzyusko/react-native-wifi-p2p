@@ -14,7 +14,7 @@ const initialize = () => WiFiP2PManager.init();
 
 const startDiscoveringPeers = () => new Promise((resolve, reject) => {
     WiFiP2PManager.discoverPeers((reasonCode) => {
-        reasonCode === undefined ? resolve() : reject(getError(reasonCode));
+        reasonCode === undefined ? resolve('success') : reject(getError(reasonCode));
     })
 });
 
