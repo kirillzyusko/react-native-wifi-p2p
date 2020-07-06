@@ -110,8 +110,8 @@ compile project(':react-native-wifi-p2p')
 * [getGroupInfo()](#getgroupinfo)
 * [getConnectionInfo()](#getconnectioninfo)
 * [sendFile(pathToFile)](#sendfilepathtofile)
-* [sendMessage(message)]($sendmessagemessage)
-* [receiveFile(folder, fileName)](#receivefilefolderfilename)
+* [sendMessage(message)](#sendmessagemessage)
+* [receiveFile(folder, fileName)](#receivefilefolder-filename)
 * [receiveMessage()](#receivemessage)
 
 ### CONSTANTS
@@ -333,14 +333,6 @@ You should call this method if you want to send from client side to server (grou
 
 _Note_: you cannot send character encoding for string and by default this library uses `UTF-8`.
 
-### receiveMessage()
-
-If you expect, that someone may send you a message - you can call this method in order to receive it:
-```javascript
-receiveMessage()
-    .then(message => console.log(`Received message: ${message}`))
-```
-
 ### receiveFile(folder, fileName)
 
 If you expect, that someone may send you a file - you can call this method in order to receive it.
@@ -381,6 +373,13 @@ PermissionsAndroid.request(
           .catch(err => console.log(err));
 ```
 
+### receiveMessage()
+
+If you expect, that someone may send you a message - you can call this method in order to receive it:
+```javascript
+receiveMessage()
+    .then(message => console.log(`Received message: ${message}`))
+```
 
 ## CONSTANTS
 
