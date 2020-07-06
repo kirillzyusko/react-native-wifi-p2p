@@ -76,11 +76,7 @@ const receiveFile = (folder, fileName) => new Promise((resolve, reject) => {
     });
 });
 
-const sendMessage = (message) => new Promise((resolve, reject) => {
-    WiFiP2PManager.sendMessage(message, (reasonCode) => {
-        reasonCode === undefined ? resolve() : reject(getError(reasonCode));
-    });
-});
+const sendMessage = (message) => WiFiP2PManager.sendMessage(message);
 
 const receiveMessage = () => new Promise((resolve, reject) => {
     WiFiP2PManager.receiveMessage((message) => {

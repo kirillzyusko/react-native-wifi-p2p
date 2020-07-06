@@ -4,6 +4,7 @@ TODO:
 - -add possibility to customize filePath on receiveFile-
 - -rewrite System.*.println calls to Log.*-
 - -fix promise resolving-
+- remove gradlew from npm package
 - fix memory leaks (subscribe events)
 - remove deprecated methods
 - fix documentation (write/read permissions on receiveFile)

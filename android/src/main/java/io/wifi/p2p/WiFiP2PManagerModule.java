@@ -259,16 +259,24 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
-    public void sendMessage(String message, Callback callback) {
+    public void sendMessage(String message, final Promise promise) {
         Log.i(TAG, "Sending message: " + message);
         Intent serviceIntent = new Intent(getCurrentActivity(), MessageTransferService.class);
         serviceIntent.setAction(MessageTransferService.ACTION_SEND_MESSAGE);
         serviceIntent.putExtra(MessageTransferService.EXTRAS_DATA, message);
         serviceIntent.putExtra(MessageTransferService.EXTRAS_GROUP_OWNER_ADDRESS, wifiP2pInfo.groupOwnerAddress.getHostAddress());
         serviceIntent.putExtra(MessageTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
+        serviceIntent.putExtra(MessageTransferService.REQUEST_RECEIVER_EXTRA, new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                if (resultCode == 0) { // successful transfer
+                    promise.resolve(mapper.mapSendMessageBundleToReactEntity(resultData));
+                } else { // error
+                    promise.reject(String.valueOf(resultCode), resultData.getString("error"));
+                }
+            }
+        });
         getCurrentActivity().startService(serviceIntent);
-
-        callback.invoke("soon will be");
     }
 
     @ReactMethod
