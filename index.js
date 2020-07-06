@@ -60,8 +60,6 @@ const removeGroup = () => new Promise((resolve, reject) => {
 
 const getAvailablePeers = () => WiFiP2PManager.getAvailablePeersList();
 
-const isSuccessfulInitialize = () => WiFiP2PManager.isSuccessfulInitialize();
-
 const stopDiscoveringPeers = () => new Promise((resolve, reject) => {
     WiFiP2PManager.stopPeerDiscovery(reasonCode => {
         reasonCode === undefined ? resolve() : reject(getError(reasonCode));

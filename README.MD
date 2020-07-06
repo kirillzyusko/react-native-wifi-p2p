@@ -99,7 +99,6 @@ compile project(':react-native-wifi-p2p')
 
 ### Initialization
 * [initialize()](#initialize)
-* [isSuccessfulInitialize()](#issuccessfulinitialize)
 * [startDiscoveringPeers()](#startdiscoveringpeers)
 * [stopDiscoveringPeers()](#stopdiscoveringpeers)
 
@@ -139,14 +138,6 @@ Notice, that recommend called only once.
 
 ```javascript
 initialize();
-```
-
-### isSuccessfulInitialize()
-Return boolean status `true/false` of initialization method.
-
-```javascript
-isSuccessfulInitialize()
-    .then(isSuccessfulInitialize => console.log('isSuccessfulInitialize: ', status));
 ```
 
 ### startDiscoveringPeers()
