@@ -111,7 +111,7 @@ compile project(':react-native-wifi-p2p')
 * [getConnectionInfo()](#getconnectioninfo)
 * [sendFile(pathToFile)](#sendfilepathtofile)
 * [sendMessage(message)](#sendmessagemessage)
-* [receiveFile(folder, fileName)](#receivefilefolder-filename)
+* [receiveFile(folder, fileName)](#receivefilefolder-filename-forcetoscangallery)
 * [receiveMessage()](#receivemessage)
 
 ### CONSTANTS
@@ -333,11 +333,13 @@ You should call this method if you want to send from client side to server (grou
 
 _Note_: you cannot send character encoding for string and by default this library uses `UTF-8`.
 
-### receiveFile(folder, fileName)
+### receiveFile(folder, fileName, forceToScanGallery)
 
 If you expect, that someone may send you a file - you can call this method in order to receive it.
 
 If you want to save file with the same name as it's on client device, then before sending file you can `sendMessage` about its `fileName`.
+
+`forceToScanGallery` is an optional parameter, which indicate whether should we scan and detect new files or not in order to show them in Gallery app. By default it's `false`.
 
 _Note:_ if you expect file to be received you should request permissions for writing to the storage:
 

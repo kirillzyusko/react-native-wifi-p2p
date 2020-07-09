@@ -2,7 +2,6 @@ package io.wifi.p2p;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -24,6 +23,7 @@ import static io.wifi.p2p.Utils.copyBytes;
 public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
     private static final String TAG = "RNWiFiP2P";
     private Callback callback;
+    private CustomDefinedCallback customDefinedCallback;
     private String destination;
 
     /**
@@ -31,9 +31,10 @@ public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
      * @param callback
      * @param destination
      */
-    public FileServerAsyncTask(Context context, Callback callback, String destination) {
+    public FileServerAsyncTask(Context context, Callback callback, String destination, CustomDefinedCallback customDefinedCallback) {
         this.callback = callback;
         this.destination = destination;
+        this.customDefinedCallback = customDefinedCallback;
     }
 
     @Override
@@ -67,6 +68,7 @@ public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
         if (result != null) {
             Log.i(TAG, "File copied - " + result);
             callback.invoke(result);
+            customDefinedCallback.invoke(null);
         }
     }
     /*

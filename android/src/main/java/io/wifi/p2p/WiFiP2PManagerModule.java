@@ -13,6 +13,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ResultReceiver;
 import android.util.Log;
 
@@ -242,14 +243,25 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
-    public void receiveFile(String folder, String fileName, final Callback callback) {
+    public void receiveFile(String folder, String fileName, final Boolean forceToScanGallery, final Callback callback) {
         final String destination = folder + fileName;
         manager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
             @Override
             public void onConnectionInfoAvailable(WifiP2pInfo info) {
                 if (info.groupFormed && info.isGroupOwner) {
-                    new FileServerAsyncTask(getCurrentActivity(), callback, destination)
-                            .execute();
+                    new FileServerAsyncTask(getCurrentActivity(), callback, destination, new CustomDefinedCallback() {
+                        @Override
+                        public void invoke(Object object) {
+                            if (forceToScanGallery) { // fixes: https://github.com/kirillzyusko/react-native-wifi-p2p/issues/31
+                                reactContext.sendBroadcast(
+                                        new Intent(
+                                                Intent.ACTION_MEDIA_MOUNTED,
+                                                Uri.parse("file://"+ Environment.getExternalStorageDirectory())
+                                        )
+                                );
+                            }
+                        }
+                    }).execute();
                 } else if (info.groupFormed) {
                     // The other device acts as the client
                 }
