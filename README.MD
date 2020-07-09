@@ -111,7 +111,7 @@ compile project(':react-native-wifi-p2p')
 * [getConnectionInfo()](#getconnectioninfo)
 * [sendFile(pathToFile)](#sendfilepathtofile)
 * [sendMessage(message)](#sendmessagemessage)
-* [receiveFile(folder, fileName)](#receivefilefolder-filename-forcetoscangallery)
+* [receiveFile(folder, fileName, forceToScanGallery)](#receivefilefolder-filename-forcetoscangallery)
 * [receiveMessage()](#receivemessage)
 
 ### CONSTANTS
