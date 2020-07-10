@@ -12,6 +12,7 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.ResultReceiver;
@@ -253,12 +254,16 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
                         @Override
                         public void invoke(Object object) {
                             if (forceToScanGallery) { // fixes: https://github.com/kirillzyusko/react-native-wifi-p2p/issues/31
-                                reactContext.sendBroadcast(
-                                        new Intent(
-                                                Intent.ACTION_MEDIA_MOUNTED,
-                                                Uri.parse("file://"+ Environment.getExternalStorageDirectory())
-                                        )
-                                );
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                    final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                                    final File file = new File(destination);
+                                    final Uri contentUri = Uri.fromFile(file);
+                                    scanIntent.setData(contentUri);
+                                    reactContext.sendBroadcast(scanIntent);
+                                } else {
+                                    final Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory()));
+                                    reactContext.sendBroadcast(intent);
+                                }
                             }
                         }
                     }).execute();
