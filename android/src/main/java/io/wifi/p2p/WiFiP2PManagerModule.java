@@ -200,11 +200,18 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
-    public void connect(String deviceAddress, final Callback callback) {
+    public void connectWithConfig(ReadableMap readableMap, final Callback callback) {
+        Bundle bundle = Arguments.toBundle(readableMap);
         WifiP2pConfig config = new WifiP2pConfig();
+
+        String deviceAddress = bundle.getString("deviceAddress");
         config.deviceAddress = deviceAddress;
         config.wps.setup = WpsInfo.PBC;
-
+        
+        if (bundle.containsKey("groupOwnerIntent")){
+            config.groupOwnerIntent = (int) bundle.getDouble("groupOwnerIntent");
+        };
+        
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -216,7 +223,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule implements 
                 callback.invoke(Integer.valueOf(reasonCode));
             }
         });
-    }
+    };
 
     @ReactMethod
     public void sendFile(String filePath, final Promise promise) {
