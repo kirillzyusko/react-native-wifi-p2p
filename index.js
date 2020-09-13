@@ -39,8 +39,10 @@ const subscribeOnConnectionInfoUpdates = (callback) => subscribeOnEvent(CONNECTI
 
 const unsubscribeFromConnectionInfoUpdates = (callback) => unsubscribeFromEvent(CONNECTION_INFO_UPDATED_ACTION, callback);
 
-const connect = (deviceAddress) => new Promise((resolve, reject) => {
-    WiFiP2PManager.connect(deviceAddress, status => {
+const connect = (deviceAddress) => connectWithConfig({ deviceAddress });
+
+const connectWithConfig = (args) => new Promise((resolve, reject) => {
+    WiFiP2PManager.connectWithConfig(args, status => {
         status === undefined ? resolve() : reject(getError(status));
     })
 });
@@ -104,6 +106,7 @@ export {
     unsubscribeFromConnectionInfoUpdates,
     getAvailablePeers,
     connect,
+    connectWithConfig,
     cancelConnect,
     createGroup,
     removeGroup,
