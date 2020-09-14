@@ -223,6 +223,19 @@ connect('22:47:da:9d:58:83')
     .catch(err => console.error('Something gone wrong. Details: ', err));
 ```
 
+
+### connectWithConfig(connectionArgs)
+
+Connect to network. The method takes two arguments `deviceAddress` and an optional 
+`groupOwnerIntent`. `groupOwnerIntent` specifies to the OS the intentsity with which the device initiaiting the connection wants to be the group Owner.(i.e the server). It takes a value between `0` and `15`, 0 and 15 being the least and most likely group owners respectively. i.e device specifying `groupOwnerIntent 15` is more likely to be a group owner.
+Link to andrdoid documentation [https://developer.android.com/reference/android/net/wifi/p2p/WifiP2pConfig]
+
+```javascript
+connect({ deviceAddress: '22:47:da:9d:58:83', groupOwnerIntent: 15 })
+    .then(() => console.log('Successfully connected as group Owner.'))
+    .catch(err => console.error('Something gone wrong. Details: ', err));
+```
+
 ### cancelConnect()
 
 Cancel connection from network. Should use when you want to reconnect or turn off wifi.
