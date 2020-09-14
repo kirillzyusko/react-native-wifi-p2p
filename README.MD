@@ -104,6 +104,7 @@ compile project(':react-native-wifi-p2p')
 ### Interaction with other devices
 * [getAvailablePeers()](#getavailablepeers)
 * [connect(deviceAddress)](#connectdeviceaddress)
+* [connectWithConfig(connectionArgs)](#connectwithconfigconnectionargs)
 * [cancelConnect()](#cancelconnect)
 * [createGroup()](#creategroup)
 * [removeGroup()](#removegroup)
@@ -433,7 +434,9 @@ subscribeOnEvent(PEERS_UPDATED_ACTION, (event) => {
 
 On Android >= 6.0 you should ask permissions before usage of this library (since this grants are required):
 
-> **Note:** you can ask this grants before `startDiscoveringPeers`
+> **Note:** you should ask this grants before `startDiscoveringPeers`
+
+> **Note:** on Android 10 you will probably need to ask `ACCESS_FINE_LOCATION` instead of `ACCESS_COARSE_LOCATION`.
 
 ```javascript
 import { PermissionsAndroid } from 'react-native';
