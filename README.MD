@@ -231,7 +231,7 @@ Connect to network. The method takes two arguments `deviceAddress` and an option
 Link to andrdoid documentation [https://developer.android.com/reference/android/net/wifi/p2p/WifiP2pConfig]
 
 ```javascript
-connect({ deviceAddress: '22:47:da:9d:58:83', groupOwnerIntent: 15 })
+connectWithConfig({ deviceAddress: '22:47:da:9d:58:83', groupOwnerIntent: 15 })
     .then(() => console.log('Successfully connected as group Owner.'))
     .catch(err => console.error('Something gone wrong. Details: ', err));
 ```
