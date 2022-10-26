@@ -95,11 +95,8 @@ compile project(':react-native-wifi-p2p')
 
 ### Subscribers & Actions annunciators
 * [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
-* [unsubscribeFromPeersUpdates(callback)](#unsubscribefrompeersupdatescallback)
 * [subscribeOnConnectionInfoUpdates(callback)](#subscribeonconnectioninfoupdatescallback)
-* [unsubscribeFromConnectionInfoUpdates(callback)](#unsubscribefromconnectioninfoupdatescallback)
 * [subscribeOnThisDeviceChanged(callback)](#subscribeonthisdevicechangedcallback)
-* [unsubscribeFromThisDeviceChanged(callback)](#unsubscribefromthisdevicechangedcallback)
 
 ### Interaction with other devices
 * [getAvailablePeers()](#getavailablepeers)
@@ -161,46 +158,34 @@ stopDiscoveringPeers()
 `subscribeOnPeersUpdates(callback)` allow to subscribe on events, that will notify about availability of nearby devices.
 
 ```javascript
-subscribeOnPeersUpdates(({ devices }) => {
+const subscription = subscribeOnPeersUpdates(({ devices }) => {
     console.log(`New devices available: ${devices}`);
 });
-```
 
-### unsubscribeFromPeersUpdates(callback)
-```javascript
-unsubscribeFromPeersUpdates((event) => console.log(event));
+// in order to remove a subscription (on unmount for example)
+subscription.remove();
 ```
 
 ### subscribeOnConnectionInfoUpdates(callback)
 
 ```javascript
-subscribeOnConnectionInfoUpdates((event) => {
+const subscription = subscribeOnConnectionInfoUpdates((event) => {
     console.log('Connection Info Updates: ', event);
 });
-```
 
-### unsubscribeFromConnectionInfoUpdates(callback)
-
-```javascript
-unsubscribeFromConnectionInfoUpdates((event) => {
-    console.log('Unsubscribe from ConnectionInfoUpdates action: ', event);
-});
+// in order to remove a subscription (on unmount for example)
+subscription.remove();
 ```
 
 ### subscribeOnThisDeviceChanged(callback)
 
 ```javascript
-subscribeOnThisDeviceChanged((event) => {
+const subscription = subscribeOnThisDeviceChanged((event) => {
     console.log('This device changed: ', event);
 });
-```
 
-### unsubscribeFromThisDeviceChanged(callback)
-
-```javascript
-unsubscribeFromThisDeviceChanged((event) => {
-    console.log('Unsubscribe from ThisDeviceChanged action: ', event);
-});
+// in order to remove a subscription (on unmount for example)
+subscription.remove();
 ```
 
 ## Interaction with other devices
@@ -419,10 +404,7 @@ import {
     CONNECTION_INFO_UPDATED_ACTION,
     THIS_DEVICE_CHANGED_ACTION
  } from 'react-native-wifi-p2p';
-import {
-    subscribeOnEvent,
-    unsubscribeFromEvent
-} from 'react-native-wifi-p2p';
+import {subscribeOnEvent} from 'react-native-wifi-p2p';
 
 // example of usage
 subscribeOnEvent(PEERS_UPDATED_ACTION, (event) => {
@@ -472,9 +454,6 @@ import {
   initialize,
   startDiscoveringPeers,
   stopDiscoveringPeers,
-  unsubscribeFromPeersUpdates,
-  unsubscribeFromThisDeviceChanged,
-  unsubscribeFromConnectionInfoUpdates,
   subscribeOnConnectionInfoUpdates,
   subscribeOnThisDeviceChanged,
   subscribeOnPeersUpdates,
@@ -494,6 +473,10 @@ import { PermissionsAndroid } from 'react-native';
 
 type Props = {};
 export default class App extends PureComponent<Props> {
+  peersUpdatesSubscription;
+  connectionInfoUpdatesSubscription;
+  thisDeviceChangedSubscription;
+
   state = {
     devices: []
   };
@@ -512,9 +495,9 @@ export default class App extends PureComponent<Props> {
 
           console.log(granted === PermissionsAndroid.RESULTS.GRANTED ? "You can use the p2p mode" : "Permission denied: p2p mode will not work");
 
-          subscribeOnPeersUpdates(this.handleNewPeers);
-          subscribeOnConnectionInfoUpdates(this.handleNewInfo);
-          subscribeOnThisDeviceChanged(this.handleThisDeviceChanged);
+          this.peersUpdatesSubscription = subscribeOnPeersUpdates(this.handleNewPeers);
+          this.connectionInfoUpdatesSubscription = subscribeOnConnectionInfoUpdates(this.handleNewInfo);
+          this.thisDeviceChangedSubscription = subscribeOnThisDeviceChanged(this.handleThisDeviceChanged);
 
           const status = await startDiscoveringPeers();
           console.log('startDiscoveringPeers status: ', status);
@@ -524,9 +507,9 @@ export default class App extends PureComponent<Props> {
   }
 
   componentWillUnmount() {
-    unsubscribeFromConnectionInfoUpdates(this.handleNewInfo);
-    unsubscribeFromPeersUpdates(this.handleNewPeers);
-    unsubscribeFromThisDeviceChanged(this.handleThisDeviceChanged)
+    this.peersUpdatesSubscription?.remove();
+    this.connectionInfoUpdatesSubscription?.remove();
+    this.thisDeviceChangedSubscription?.remove();
   }
 
   handleNewInfo = (info) => {

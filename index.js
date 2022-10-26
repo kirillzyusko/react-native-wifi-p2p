@@ -20,23 +20,39 @@ const startDiscoveringPeers = () => new Promise((resolve, reject) => {
 });
 
 const subscribeOnEvent = (event, callback) => {
-    DeviceEventEmitter.addListener(`${MODULE_NAME}:${event}`, callback);
+    return DeviceEventEmitter.addListener(`${MODULE_NAME}:${event}`, callback);
 };
 
+/**
+ * @deprecated since RN 0.65 because of favour to new API.
+ * @see https://github.com/kirillzyusko/react-native-wifi-p2p/releases/tag/3.3.0 for migration process.
+ */
 const unsubscribeFromEvent = (event, callback) => {
     DeviceEventEmitter.removeListener(`${MODULE_NAME}:${event}`, callback);
 };
 
 const subscribeOnThisDeviceChanged = (callback) => subscribeOnEvent(THIS_DEVICE_CHANGED_ACTION, callback);
 
+/**
+ * @deprecated since RN 0.65 because of favour to new API.
+ * @see https://github.com/kirillzyusko/react-native-wifi-p2p/releases/tag/3.3.0 for migration process.
+ */
 const unsubscribeFromThisDeviceChanged = (callback) => unsubscribeFromEvent(THIS_DEVICE_CHANGED_ACTION, callback);
 
 const subscribeOnPeersUpdates = (callback) => subscribeOnEvent(PEERS_UPDATED_ACTION, callback);
 
+/**
+ * @deprecated since RN 0.65 because of favour to new API.
+ * @see https://github.com/kirillzyusko/react-native-wifi-p2p/releases/tag/3.3.0 for migration process.
+ */
 const unsubscribeFromPeersUpdates = (callback) => unsubscribeFromEvent(PEERS_UPDATED_ACTION, callback);
 
 const subscribeOnConnectionInfoUpdates = (callback) => subscribeOnEvent(CONNECTION_INFO_UPDATED_ACTION, callback);
 
+/**
+ * @deprecated since RN 0.65 because of favour to new API.
+ * @see https://github.com/kirillzyusko/react-native-wifi-p2p/releases/tag/3.3.0 for migration process.
+ */
 const unsubscribeFromConnectionInfoUpdates = (callback) => unsubscribeFromEvent(CONNECTION_INFO_UPDATED_ACTION, callback);
 
 const connect = (deviceAddress) => connectWithConfig({ deviceAddress });
