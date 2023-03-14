@@ -333,6 +333,10 @@ PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
   .catch((err) => console.log(err));
 ```
 
+### sendFileTo(pathToFile, address)
+
+Same function as above but you can specify the address (a peer address in the same group as this device is).
+
 ### receiveFile(folder, fileName, forceToScanGallery)
 
 If you expect, that someone may send you a file - you can call this method in order to receive it.
