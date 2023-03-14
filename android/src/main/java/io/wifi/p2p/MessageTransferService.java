@@ -25,8 +25,8 @@ public class MessageTransferService extends IntentService {
     private static final int SOCKET_TIMEOUT = 5000;
     public static final String ACTION_SEND_MESSAGE = "io.wifi.p2p.SEND_MESSAGE";
     public static final String EXTRAS_DATA = "message";
-    public static final String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
-    public static final String EXTRAS_GROUP_OWNER_PORT = "go_port";
+    public static final String EXTRAS_ADDRESS = "target_adress";
+    public static final String EXTRAS_PORT = "target_port";
     public static final String REQUEST_RECEIVER_EXTRA = "REQUEST_RECEIVER_EXTRA";
     private static final String TAG = "RNWiFiP2P";
 
@@ -47,9 +47,9 @@ public class MessageTransferService extends IntentService {
         long start = System.currentTimeMillis();
         if (intent.getAction().equals(ACTION_SEND_MESSAGE)) {
             String message = intent.getExtras().getString(EXTRAS_DATA);
-            String host = intent.getExtras().getString(EXTRAS_GROUP_OWNER_ADDRESS);
+            String host = intent.getExtras().getString(EXTRAS_ADDRESS);
             ResultReceiver rec = intent.getParcelableExtra(REQUEST_RECEIVER_EXTRA);
-            int port = intent.getExtras().getInt(EXTRAS_GROUP_OWNER_PORT);
+            int port = intent.getExtras().getInt(EXTRAS_PORT);
             Socket socket = new Socket();
             Bundle bundle = new Bundle();
 
