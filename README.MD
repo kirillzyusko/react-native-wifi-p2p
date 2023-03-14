@@ -338,15 +338,7 @@ _Note_: you cannot send character encoding for string and by default this librar
 
 ### sendMessageTo(message, address)
 
-You should call this method if you want to send message to a specific address (peer address in the same group). Before sending you should execute next steps:
-
-1. Create group
-2. Connect to group from client side
-3. After establishing connection you should call `getConnectionInfo()` on client side (also recommend do it on group-server side)
-4. Call `receiveMessage()` on at least one side (`receiveMessage` return `Promise<string>` - message from client)
-5. Call `sendMessage(message)` on on other side, after resolving `getConnectionInfo()`
-
-_Note_: you cannot send character encoding for string and by default this library uses `UTF-8`.
+Same function as above but you can specify the address (a peer address in the same group as this device is).
 
 ### receiveFile(folder, fileName, forceToScanGallery)
 
