@@ -321,6 +321,9 @@ PermissionsAndroid.request(
           })
           .catch(err => console.log(err));
 ```
+### sendFileTo(pathToFile, address)
+
+Same function as above but you can specify the address (a peer address in the same group as this device is).
 
 ### sendMessage(message)
 You should call this method if you want to send from client side to server (group) using wi-fi p2p feature. Before sending you should execute next steps:
@@ -331,6 +334,11 @@ You should call this method if you want to send from client side to server (grou
 5. Call `sendMessage(message)` on client side, after resolving `getConnectionInfo()`
 
 _Note_: you cannot send character encoding for string and by default this library uses `UTF-8`.
+
+
+### sendMessageTo(message, address)
+
+Same function as above but you can specify the address (a peer address in the same group as this device is).
 
 ### receiveFile(folder, fileName, forceToScanGallery)
 
