@@ -27,8 +27,8 @@ public class FileTransferService extends IntentService {
     private static final int SOCKET_TIMEOUT = 5000;
     public static final String ACTION_SEND_FILE = "io.wifi.p2p.SEND_FILE";
     public static final String EXTRAS_FILE_PATH = "file_url";
-    public static final String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
-    public static final String EXTRAS_GROUP_OWNER_PORT = "go_port";
+    public static final String EXTRAS_ADDRESS = "go_host";
+    public static final String EXTRAS_PORT = "go_port";
     public static final String REQUEST_RECEIVER_EXTRA = "REQUEST_RECEIVER_EXTRA";
     private static final String TAG = "RNWiFiP2P";
 
