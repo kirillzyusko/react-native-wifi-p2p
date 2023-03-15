@@ -1,0 +1,26 @@
+name: 📱 Validate Android
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/verify-android.yml'
+      - 'android/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/verify-android.yml'
+      - 'android/**'
+
+jobs:
+  java-lint:
+    runs-on: ubuntu-latest
+    name: 🔎 Java Lint
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run Java Lint
+        run: yarn lint-java

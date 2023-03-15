@@ -9,7 +9,12 @@
   "homepage": "https://github.com/kirikzyusko1996/react-native-wifi-p2p#README.MD",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint-java": "node scripts/java-lint.js --check"
+  },
+  "devDependencies": {
+    "shelljs": "^0.8.5",
+    "yargs": "^17.7.1"
   },
   "keywords": [
     "react-native",
