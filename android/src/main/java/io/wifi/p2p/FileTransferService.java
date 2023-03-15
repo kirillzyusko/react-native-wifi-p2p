@@ -50,9 +50,9 @@ public class FileTransferService extends IntentService {
         Context context = getApplicationContext();
         if (intent.getAction().equals(ACTION_SEND_FILE)) {
             String fileUri = intent.getExtras().getString(EXTRAS_FILE_PATH);
-            String host = intent.getExtras().getString(EXTRAS_GROUP_OWNER_ADDRESS);
+            String host = intent.getExtras().getString(EXTRAS_ADDRESS);
+            int port = intent.getExtras().getInt(EXTRAS_PORT);
             ResultReceiver rec = intent.getParcelableExtra(REQUEST_RECEIVER_EXTRA);
-            int port = intent.getExtras().getInt(EXTRAS_GROUP_OWNER_PORT);
             Socket socket = new Socket();
             Bundle bundle = new Bundle();
 
