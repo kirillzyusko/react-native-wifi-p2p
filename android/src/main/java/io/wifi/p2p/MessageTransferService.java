@@ -21,8 +21,8 @@ public class MessageTransferService extends IntentService {
   private static final int SOCKET_TIMEOUT = 5000;
   public static final String ACTION_SEND_MESSAGE = "io.wifi.p2p.SEND_MESSAGE";
   public static final String EXTRAS_DATA = "message";
-  public static final String EXTRAS_ADDRESS = "target_adress";
-  public static final String EXTRAS_PORT = "target_port";
+  public static final String EXTRAS_ADDRESS = "go_host";
+  public static final String EXTRAS_PORT = "go_port";
   public static final String REQUEST_RECEIVER_EXTRA = "REQUEST_RECEIVER_EXTRA";
   private static final String TAG = "RNWiFiP2P";
 

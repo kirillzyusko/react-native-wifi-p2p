@@ -255,7 +255,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
 
   @ReactMethod
   public void sendFile(String filePath, final Promise promise) {
-    return sendFileTo(filePath, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
+    sendFileTo(filePath, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
   }
 
   @ReactMethod
