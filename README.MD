@@ -58,9 +58,13 @@ npm install react-native-wifi-p2p --save
 +           android:name="android.permission.ACCESS_WIFI_STATE"/>
 +   <uses-permission
 +           android:required="true"
-+           android:name="android.permission.CHANGE_WIFI_STATE"/>    
++           android:name="android.permission.CHANGE_WIFI_STATE"/>
 +   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-+   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>                                          
++   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
++   <!-- If your app targets Android 13 (API level 33) or higher, you must declare the NEARBY_WIFI_DEVICES permission. -->
++   <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
++   <!-- If your app derives location information from Wi-Fi APIs, don't include the "usesPermissionFlags" attribute. -->
++        android:usesPermissionFlags="neverForLocation" />
     ...
 ```
 
