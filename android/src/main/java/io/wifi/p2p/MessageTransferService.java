@@ -44,8 +44,8 @@ public class MessageTransferService extends IntentService {
     if (intent.getAction().equals(ACTION_SEND_MESSAGE)) {
       String message = intent.getExtras().getString(EXTRAS_DATA);
       String host = intent.getExtras().getString(EXTRAS_ADDRESS);
-      ResultReceiver rec = intent.getParcelableExtra(REQUEST_RECEIVER_EXTRA);
       int port = intent.getExtras().getInt(EXTRAS_PORT);
+      ResultReceiver rec = intent.getParcelableExtra(REQUEST_RECEIVER_EXTRA);
       Socket socket = new Socket();
       Bundle bundle = new Bundle();
 

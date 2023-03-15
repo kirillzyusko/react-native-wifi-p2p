@@ -331,7 +331,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
 
   @ReactMethod
   public void sendMessage(String message, final Promise promise) {
-    this.sendMessageTo(message, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
+    sendMessageTo(message, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
   }
 
   @ReactMethod
