@@ -133,8 +133,10 @@ export {
     getConnectionInfo,
     getGroupInfo,
     sendFile,
+    sendFileTo,
     receiveFile,
     sendMessage,
+    sendMessageTo,
     receiveMessage,
 
     // system methods
