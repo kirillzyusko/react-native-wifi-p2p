@@ -3,13 +3,13 @@ name: 📱 Validate Android
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - '.github/workflows/verify-android.yml'
       - 'android/**'
   pull_request:
     branches:
-      - main
+      - master
     paths:
       - '.github/workflows/verify-android.yml'
       - 'android/**'
