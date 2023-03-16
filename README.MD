@@ -68,8 +68,6 @@ npm install react-native-wifi-p2p --save
     ...
 ```
 
-> **Note**: if you are targeting Android 13+ you also need to ask `NEARBY_WIFI_DEVICES` permission in runtime. You can do it using `react-native-permissions` library.
-
 ### Link library
 > **Note**: You should skip it if you use react-native >0.60 
 * Append the following lines to `android/settings.gradle`
@@ -433,6 +431,8 @@ On Android >= 6.0 you should ask permissions before usage of this library (since
 > **Note:** you should ask this grants before `startDiscoveringPeers`
 
 > **Note:** on Android 10 you will probably need to ask `ACCESS_FINE_LOCATION` instead of `ACCESS_COARSE_LOCATION`.
+
+> **Note**: if you are targeting Android 13+ you also need to ask `NEARBY_WIFI_DEVICES` permission in runtime. You can do it using `react-native-permissions` library, if you are using react-native < 0.70
 
 ```javascript
 import { PermissionsAndroid } from 'react-native';
