@@ -1,6 +1,6 @@
 {
   "name": "react-native-wifi-p2p",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "Module for working with wifi direct (p2p) API module in android.",
   "repository": {
     "type": "git",
