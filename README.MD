@@ -10,6 +10,7 @@ If you want to provide iOS support, then you should to note to [react-native-mul
 Test project with all API cases you can find [here](https://github.com/kirillzyusko/react-native-wifi-p2p-example).
 
 ## React Native Compatibility
+
 To use this library you need to ensure you match up with the correct version of React Native you are using.
 
 p.s. React Native introduced AndroidX support in 0.60, which is a **breaking change** for most libraries (incl. this one) using native Android functionality.
@@ -20,6 +21,7 @@ p.s. React Native introduced AndroidX support in 0.60, which is a **breaking cha
 | `0.x.x`                                   | `<= 0.59`                                                                         |
 
 # Contents
+
 * [Installation](#installation)
   * [npm install](#install-library-from-npm)
   * [grand permissions](#allow-grant-permission-to-wifi-module)
@@ -69,17 +71,19 @@ npm install react-native-wifi-p2p --save
 ```
 
 ### Link library
-> **Note**: You should skip it if you use react-native >0.60 
+
+> **Note**: You should skip it if you use react-native >0.60
+
 * Append the following lines to `android/settings.gradle`
 
-```
+```gradle
 include ':react-native-wifi-p2p'
 project(':react-native-wifi-p2p').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wifi-p2p/android')
 ```
 
 * Insert the following lines inside the dependencies block in `android/app/build.gradle`:
 
-```
+```gradle
 compile project(':react-native-wifi-p2p')
 ```
 
@@ -93,16 +97,19 @@ compile project(':react-native-wifi-p2p')
 ## API
 
 ### Initialization
+
 * [initialize()](#initialize)
 * [startDiscoveringPeers()](#startdiscoveringpeers)
 * [stopDiscoveringPeers()](#stopdiscoveringpeers)
 
 ### Subscribers & Actions annunciators
+
 * [subscribeOnPeersUpdates(callback)](#subscribeonpeersupdatescallback)
 * [subscribeOnConnectionInfoUpdates(callback)](#subscribeonconnectioninfoupdatescallback)
 * [subscribeOnThisDeviceChanged(callback)](#subscribeonthisdevicechangedcallback)
 
 ### Interaction with other devices
+
 * [getAvailablePeers()](#getavailablepeers)
 * [connect(deviceAddress)](#connectdeviceaddress)
 * [connectWithConfig(connectionArgs)](#connectwithconfigconnectionargs)
@@ -112,11 +119,14 @@ compile project(':react-native-wifi-p2p')
 * [getGroupInfo()](#getgroupinfo)
 * [getConnectionInfo()](#getconnectioninfo)
 * [sendFile(pathToFile)](#sendfilepathtofile)
+* [sendFileTo(pathToFile, address)](#sendfiletopathtofile-address)
 * [sendMessage(message)](#sendmessagemessage)
+* [sendMessageTo(message, address)](#sendmessagetomessage-address)
 * [receiveFile(folder, fileName, forceToScanGallery)](#receivefilefolder-filename-forcetoscangallery)
 * [receiveMessage()](#receivemessage)
 
 ### CONSTANTS
+
 * [WifiP2pDevice statuses](#wifip2pdevice-statuses)
 * [Events of library](#events-of-library)
 
@@ -155,6 +165,7 @@ stopDiscoveringPeers()
     .then(() => console.log('Stop discovering was successful'))
     .catch(err => console.error(`Something is gone wrong. Maybe your WiFi is disabled? Error details: ${err}`));
 ```
+
 ## Subscribers & Actions annunciators
 
 ### subscribeOnPeersUpdates(callback)
@@ -193,11 +204,13 @@ subscription.remove();
 ```
 
 ## Interaction with other devices
+
 ### getAvailablePeers()
 
 If you don't want to always get notification from event emitter, when peers list has changed, you can use this method. This method will return info about nearby devices, that is available for searching, at the time of the call this method.
 
 **Important:** before using this method you also need to call `startDiscoveringPeers`. In other case you always will get empty array.
+
 ```javascript
 getAvailablePeers()
     .then(({ devices }) => console.log(devices))
@@ -212,7 +225,6 @@ connect('22:47:da:9d:58:83')
     .then(() => console.log('Successfully connected'))
     .catch(err => console.error('Something gone wrong. Details: ', err));
 ```
-
 
 ### connectWithConfig(connectionArgs)
 
@@ -256,6 +268,7 @@ createGroup()
 ```
 
 ### removeGroup()
+
 Before exit of application you need to call this method, if earlier you created group via `createGroup()` method.
 
 ```javascript
@@ -276,13 +289,14 @@ createGroup()
 
 ### getGroupInfo()
 
-You can call it after `createGroup()` method is executed. Info from this method also is available in `subscribeOnThisDeviceChanged`. This method was created basically for supporting API <= 17. See [issue](https://github.com/kirillzyusko/react-native-wifi-p2p/issues/21) thread. 
+You can call it after `createGroup()` method is executed. Info from this method also is available in `subscribeOnThisDeviceChanged`. This method was created basically for supporting API <= 17. See [issue](https://github.com/kirillzyusko/react-native-wifi-p2p/issues/21) thread.
 
 ### getConnectionInfo()
 
 This method in the main is used in `sendFile()` flow. It's needed for saving `WifiP2pInfo` internally of this library. Also this method returns actual connection information. Fot its usage see description of `sendFile` method.
 
 ### sendFile(pathToFile)
+
 You should call this method if you want to copy file from client side to server using wi-fi p2p feature. Before sending you should execute next steps:
 
 1. Create group on server side
@@ -325,12 +339,15 @@ PermissionsAndroid.request(
           })
           .catch(err => console.log(err));
 ```
+
 ### sendFileTo(pathToFile, address)
 
 Same function as above but you can specify the address (a peer address in the same group as this device is).
 
 ### sendMessage(message)
+
 You should call this method if you want to send from client side to server (group) using wi-fi p2p feature. Before sending you should execute next steps:
+
 1. Create group on server side (side, which will receive message)
 2. Connect to server-group from client side
 3. After establishing connection you should call `getConnectionInfo()` on client side (also recommend do it on group-server side)
@@ -338,7 +355,6 @@ You should call this method if you want to send from client side to server (grou
 5. Call `sendMessage(message)` on client side, after resolving `getConnectionInfo()`
 
 _Note_: you cannot send character encoding for string and by default this library uses `UTF-8`.
-
 
 ### sendMessageTo(message, address)
 
@@ -389,6 +405,7 @@ PermissionsAndroid.request(
 ### receiveMessage()
 
 If you expect, that someone may send you a message - you can call this method in order to receive it:
+
 ```javascript
 receiveMessage()
     .then(message => console.log(`Received message: ${message}`))
@@ -428,9 +445,9 @@ subscribeOnEvent(PEERS_UPDATED_ACTION, (event) => {
 
 On Android >= 6.0 you should ask permissions before usage of this library (since this grants are required):
 
-> **Note:** you should ask this grants before `startDiscoveringPeers`
+> **Note**: you should ask this grants before `startDiscoveringPeers`
 
-> **Note:** on Android 10 you will probably need to ask `ACCESS_FINE_LOCATION` instead of `ACCESS_COARSE_LOCATION`.
+> **Note**: on Android 10 you will probably need to ask `ACCESS_FINE_LOCATION` instead of `ACCESS_COARSE_LOCATION`.
 
 > **Note**: if you are targeting Android 13+ you also need to ask `NEARBY_WIFI_DEVICES` permission in runtime. You can do it using `react-native-permissions` library, if you are using react-native < 0.70
 
