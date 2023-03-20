@@ -3,7 +3,6 @@ package io.wifi.p2p;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
@@ -38,12 +37,7 @@ public class WiFiP2PBroadcastReceiver extends BroadcastReceiver {
     if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
       manager.requestPeers(channel, peerListListener);
     } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-      NetworkInfo networkInfo =
-          (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-
-      if (networkInfo.isConnected()) {
-        manager.requestConnectionInfo(channel, connectionListener);
-      }
+      manager.requestConnectionInfo(channel, connectionListener);
     } else if (intent.getAction().equals(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)) {
       this.manager.requestGroupInfo(channel, groupInfoListener);
     }
