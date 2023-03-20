@@ -255,7 +255,11 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
 
   @ReactMethod
   public void sendFile(String filePath, final Promise promise) {
-    sendFileTo(filePath, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
+    if (wifiP2pInfo.groupOwnerAddress != null) {
+      sendFileTo(filePath, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
+    } else {
+      promise.reject("CONNECTION_CLOSED");
+    }
   }
 
   @ReactMethod
@@ -331,7 +335,11 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
 
   @ReactMethod
   public void sendMessage(String message, final Promise promise) {
-    sendMessageTo(message, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
+    if (wifiP2pInfo.groupOwnerAddress != null) {
+      sendMessageTo(message, wifiP2pInfo.groupOwnerAddress.getHostAddress(), promise);
+    } else {
+      promise.reject("CONNECTION_CLOSED");
+    }
   }
 
   @ReactMethod
