@@ -38,6 +38,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
   private ReactApplicationContext reactContext;
   private static final String TAG = "RNWiFiP2P";
   private WiFiP2PDeviceMapper mapper = new WiFiP2PDeviceMapper();
+  private MessageServer messageServer;
 
   public WiFiP2PManagerModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -366,18 +367,28 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
   }
 
   @ReactMethod
-  public void receiveMessage(final Callback callback) {
+  public void receiveMessage(final ReadableMap props, final Callback callback) {
     manager.requestConnectionInfo(
         channel,
         new WifiP2pManager.ConnectionInfoListener() {
           @Override
           public void onConnectionInfoAvailable(WifiP2pInfo info) {
             if (info.groupFormed) {
-              new MessageServerAsyncTask(callback).execute();
+              if (messageServer == null) {
+                messageServer = new MessageServer();
+              }
+              messageServer.start(props, callback);
             } else {
               Log.i(TAG, "You must be in a group to receive messages");
             }
           }
         });
+  }
+
+  @ReactMethod
+  public void stopReceivingMessage() {
+    if (messageServer != null) {
+      messageServer.stop();
+    }
   }
 }

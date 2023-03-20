@@ -103,11 +103,13 @@ const sendMessage = (message) => WiFiP2PManager.sendMessage(message);
 
 const sendMessageTo = (message, address) => WiFiP2PManager.sendMessageTo(message, address);
 
-const receiveMessage = () => new Promise((resolve, reject) => {
-    WiFiP2PManager.receiveMessage((message) => {
+const receiveMessage = (props) => new Promise((resolve, reject) => {
+    WiFiP2PManager.receiveMessage(props, (message) => {
         resolve(message);
     });
 });
+
+const stopReceivingMessage = () => WiFiP2PManager.stopReceivingMessage()
 
 const getConnectionInfo = () => WiFiP2PManager.getConnectionInfo();
 
@@ -138,6 +140,7 @@ export {
     sendMessage,
     sendMessageTo,
     receiveMessage,
+    stopReceivingMessage,
 
     // system methods
     subscribeOnEvent,
