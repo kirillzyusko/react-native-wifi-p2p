@@ -404,12 +404,16 @@ PermissionsAndroid.request(
 
 ### receiveMessage()
 
-If you expect, that someone may send you a message - you can call this method in order to receive it:
+If you expect, that someone may send you a message - you can call this method in order to receive it. This opens a port to listen to ONE incoming message.
 
 ```javascript
 receiveMessage()
     .then(message => console.log(`Received message: ${message}`))
 ```
+
+### stopReceivingMessage()
+
+If you didn't receive the message from receiveMessage() as expected, stopReceivingMessage() closes the listening port. If the port is already closed, this method does nothing.
 
 ## CONSTANTS
 
