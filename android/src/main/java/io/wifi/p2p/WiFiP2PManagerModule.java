@@ -90,7 +90,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
   @ReactMethod
   public void init(Promise promise) {
     if (manager != null) { // prevent reinitialization
-      promise.reject("You should only call initialize once.");
+      promise.reject("0x2", this.getName() + " module should only be initialized once.");
       return;
     }
 
