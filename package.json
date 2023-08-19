@@ -8,6 +8,7 @@
   },
   "homepage": "https://github.com/kirillzyusko/react-native-wifi-p2p#README.MD",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint-java": "node scripts/java-lint.js --check"
