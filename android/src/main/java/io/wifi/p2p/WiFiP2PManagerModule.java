@@ -90,6 +90,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
   @ReactMethod
   public void init(Promise promise) {
     if (manager != null) { // prevent reinitialization
+      promise.resolve(manager != null && channel != null);
       return;
     }
 
