@@ -39,6 +39,7 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
   private static final String TAG = "RNWiFiP2P";
   private WiFiP2PDeviceMapper mapper = new WiFiP2PDeviceMapper();
   private MessageServer messageServer;
+  private FileServer fileServer;
 
   public WiFiP2PManagerModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -292,7 +293,11 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
 
   @ReactMethod
   public void receiveFile(
-      String folder, String fileName, final Boolean forceToScanGallery, final Callback callback) {
+      String folder,
+      String fileName,
+      final Boolean forceToScanGallery,
+      final ReadableMap extraProps,
+      final Callback callback) {
     final String destination = folder + fileName;
     manager.requestConnectionInfo(
         channel,
@@ -300,39 +305,46 @@ public class WiFiP2PManagerModule extends ReactContextBaseJavaModule
           @Override
           public void onConnectionInfoAvailable(WifiP2pInfo info) {
             if (info.groupFormed) {
-              new FileServerAsyncTask(
-                      getCurrentActivity(),
-                      callback,
-                      destination,
-                      new CustomDefinedCallback() {
-                        @Override
-                        public void invoke(Object object) {
-                          if (forceToScanGallery) { // fixes:
-                            // https://github.com/kirillzyusko/react-native-wifi-p2p/issues/31
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                              final Intent scanIntent =
-                                  new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                              final File file = new File(destination);
-                              final Uri contentUri = Uri.fromFile(file);
-                              scanIntent.setData(contentUri);
-                              reactContext.sendBroadcast(scanIntent);
-                            } else {
-                              final Intent intent =
-                                  new Intent(
-                                      Intent.ACTION_MEDIA_MOUNTED,
-                                      Uri.parse(
-                                          "file://" + Environment.getExternalStorageDirectory()));
-                              reactContext.sendBroadcast(intent);
-                            }
-                          }
+              if (fileServer == null) {
+                fileServer = new FileServer();
+              }
+              CustomDefinedCallback customDefinedCallback =
+                  new CustomDefinedCallback() {
+                    @Override
+                    public void invoke(Object object) {
+                      if (forceToScanGallery) { // fixes:
+                        // https://github.com/kirillzyusko/react-native-wifi-p2p/issues/31
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                          final Intent scanIntent =
+                              new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                          final File file = new File(destination);
+                          final Uri contentUri = Uri.fromFile(file);
+                          scanIntent.setData(contentUri);
+                          reactContext.sendBroadcast(scanIntent);
+                        } else {
+                          final Intent intent =
+                              new Intent(
+                                  Intent.ACTION_MEDIA_MOUNTED,
+                                  Uri.parse("file://" + Environment.getExternalStorageDirectory()));
+                          reactContext.sendBroadcast(intent);
                         }
-                      })
-                  .execute();
+                      }
+                    }
+                  };
+
+              fileServer.start(destination, extraProps, customDefinedCallback, callback);
             } else {
               Log.i(TAG, "You must be in a group to receive a file");
             }
           }
         });
+  }
+
+  @ReactMethod
+  public void stopReceivingFile() {
+    if (fileServer != null) {
+      fileServer.stop();
+    }
   }
 
   @ReactMethod
