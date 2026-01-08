@@ -93,17 +93,19 @@ const sendFile = (pathToFile) => WiFiP2PManager.sendFile(pathToFile);
 
 const sendFileTo = (pathToFile, address) => WiFiP2PManager.sendFileTo(pathToFile, address);
 
-const receiveFile = (folder, fileName, forceToScanGallery = false) => new Promise((resolve, reject) => {
-    WiFiP2PManager.receiveFile(folder, fileName, forceToScanGallery, (pathToFile) => {
+const receiveFile = (folder, fileName, forceToScanGallery = false, extraProps = {}) => new Promise((resolve, reject) => {
+    WiFiP2PManager.receiveFile(folder, fileName, forceToScanGallery, extraProps, (pathToFile) => {
         resolve(pathToFile);
     });
 });
+
+const stopReceivingFile = () => WiFiP2PManager.stopReceivingFile()
 
 const sendMessage = (message) => WiFiP2PManager.sendMessage(message);
 
 const sendMessageTo = (message, address) => WiFiP2PManager.sendMessageTo(message, address);
 
-const receiveMessage = (props) => new Promise((resolve, reject) => {
+const receiveMessage = (props = {}) => new Promise((resolve, reject) => {
     WiFiP2PManager.receiveMessage(props, (message) => {
         resolve(message);
     });
@@ -137,6 +139,7 @@ export {
     sendFile,
     sendFileTo,
     receiveFile,
+    stopReceivingFile,
     sendMessage,
     sendMessageTo,
     receiveMessage,

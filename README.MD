@@ -360,13 +360,24 @@ _Note_: you cannot send character encoding for string and by default this librar
 
 Same function as above but you can specify the address (a peer address in the same group as this device is).
 
-### receiveFile(folder, fileName, forceToScanGallery)
+### receiveFile(folder, fileName, forceToScanGallery, extraParams)
 
 If you expect, that someone may send you a file - you can call this method in order to receive it.
 
 If you want to save file with the same name as it's on client device, then before sending file you can `sendMessage` about its `fileName`.
 
 `forceToScanGallery` is an optional parameter, which indicate whether should we scan and detect new files or not in order to show them in Gallery app. By default it's `false`.
+
+`extraParams` is an optional parameter (object) with extra arguments. Current arguments are:
+
+* **meta**: Metadata. If true, the message received is not a string, but an object:
+
+```json
+{
+  "file": "<file absolute path (string)>",
+  "fromAddress": "IP address of the sender"
+}
+```
 
 _Note:_ if you expect file to be received you should request permissions for writing to the storage:
 
@@ -409,6 +420,25 @@ If you expect, that someone may send you a message - you can call this method in
 ```javascript
 receiveMessage()
     .then(message => console.log(`Received message: ${message}`))
+```
+
+`receiveMessage` accepts an optional parameter object with extra arguments. Current arguments are:
+
+* **meta**: Metadata. If true, the message received is not a string, but an object:
+
+```json
+{
+  "message": "<message sent by sendMessage/sendMessageTo (string)>",
+  "fromAddress": "IP address of the sender"
+}
+```
+
+**Usage example:**
+
+```javascript
+receiveMessage({meta: true}).then(({fromAddress, message}) => {
+  console.log(`Received message (from IP ${fromAddress}): ${message}`)
+})
 ```
 
 ### stopReceivingMessage()

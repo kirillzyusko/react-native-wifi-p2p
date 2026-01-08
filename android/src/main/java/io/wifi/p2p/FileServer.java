@@ -1,6 +1,6 @@
 package io.wifi.p2p;
 
-import static io.wifi.p2p.Utils.CHARSET;
+import static io.wifi.p2p.Utils.copyBytes;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,9 +8,10 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.Executor;
@@ -21,44 +22,59 @@ import java.util.concurrent.Executors;
  *
  * <p>A simple server socket that accepts connection and writes some data on the stream.
  */
-public class MessageServer {
+public class FileServer {
   private static final String TAG = "RNWiFiP2P";
   private final Executor executor;
   private volatile ServerSocket serverSocket;
 
-  public MessageServer() {
+  public FileServer() {
     this.executor = Executors.newSingleThreadExecutor();
   }
 
-  public void start(ReadableMap props, Callback callback) {
+  public void start(
+      String destination,
+      ReadableMap extraProps,
+      CustomDefinedCallback customDefinedCallback,
+      Callback callback) {
     executor.execute(
         () -> {
           try {
             Boolean returnMeta = false;
             serverSocket = new ServerSocket(8988);
-            Log.i(TAG, "Server: Socket opened to receive message");
+            Log.i(TAG, "Server: Socket opened to receive file");
 
-            if (props != null) {
-              Bundle bundle = Arguments.toBundle(props);
+            if (extraProps != null) {
+              Bundle bundle = Arguments.toBundle(extraProps);
               returnMeta = bundle.getBoolean("meta");
             }
 
             Socket client = serverSocket.accept();
             String clientAddress = client.getInetAddress().getHostAddress();
-            Log.i(TAG, "Server: connection done (receiveMessage)");
+            Log.i(TAG, "Server: connection done (receiveFile)");
 
+            final File f = new File(destination);
+            File dirs = new File(f.getParent());
+            if (!dirs.exists()) dirs.mkdirs();
+            f.createNewFile();
+            Log.i(TAG, "Server: copying files " + f.toString());
             InputStream inputstream = client.getInputStream();
-            String message = convertStreamToString(inputstream);
+            copyBytes(inputstream, new FileOutputStream(f));
+
             client.close();
+
+            String result = f.getAbsolutePath();
+
+            Log.i(TAG, "File copied - " + result);
 
             if (returnMeta) {
               WritableMap map = Arguments.createMap();
-              map.putString("message", message);
+              map.putString("file", result);
               map.putString("fromAddress", clientAddress);
               callback.invoke(map);
             } else {
-              callback.invoke(message);
+              callback.invoke(result);
             }
+            customDefinedCallback.invoke(null);
 
             this.stop();
           } catch (IOException e) {
@@ -71,23 +87,10 @@ public class MessageServer {
     if (serverSocket != null) {
       try {
         serverSocket.close();
-        Log.i(TAG, "Server: Socket closed to receive message");
+        Log.i(TAG, "Server: Socket closed to receive file");
       } catch (IOException e) {
         Log.e(TAG, e.getMessage());
       }
     }
-  }
-
-  protected String convertStreamToString(InputStream is) throws IOException {
-    StringBuilder sb = new StringBuilder(Math.max(16, is.available()));
-    char[] tmp = new char[4096];
-
-    try {
-      InputStreamReader reader = new InputStreamReader(is, CHARSET);
-      for (int cnt; (cnt = reader.read(tmp)) > 0; ) sb.append(tmp, 0, cnt);
-    } finally {
-      is.close();
-    }
-    return sb.toString();
   }
 }
